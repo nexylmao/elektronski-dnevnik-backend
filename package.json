@@ -1,0 +1,25 @@
+{
+  "name": "edb",
+  "version": "0.0.1",
+  "description": "Backend deo zadatka, za projekat - MIBP, 3. godina",
+  "main": "application.js",
+  "scripts": {
+    "start": "nodemon application.js",
+    "test": "xo"
+  },
+  "author": "n33xy",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.18.2",
+    "express": "^4.16.3",
+    "fetch": "^1.1.0",
+    "jsonwebtoken": "^8.2.1",
+    "moment": "^2.22.0",
+    "mongoose": "^5.0.14",
+    "mongoose-timestamp": "^0.6.0",
+    "mongoose-unique-validator": "^2.0.0",
+    "morgan": "^1.9.0",
+    "nodemon": "^1.17.3"
+  }
+}
