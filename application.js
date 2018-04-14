@@ -2,11 +2,13 @@ const express = require('express');
 const bodyparser = require('body-parser');
 const fetch = require('fetch');
 const mongoose = require('mongoose');
+const cors = require('cors');
 const application = express();
 
 const PATH = process.env.MONGODBPATH;
 const PORT = process.env.PORT || 3000;
 
+application.use(cors());
 application.use(bodyparser.json());
 application.use(require('morgan')('dev'));
 
