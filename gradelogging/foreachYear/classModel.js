@@ -5,6 +5,10 @@ const _class = new mongoose.Schema({
         type: String,
         required: true
     },
+    facility : {
+        type: String,
+        required: true
+    },
     homeTeachers : {
         type: [String], 
         required: true

@@ -1,10 +1,9 @@
 const mongoose = require('mongoose');
 
-const _subject = new mongoose.model({
+const _subject = new mongoose.Schema({
     name : {
         type: String,
-        require: true,
-        unique: true
+        require: true
     },
     profesors : {
         type: [String],

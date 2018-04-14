@@ -24,19 +24,7 @@ const _schoolYear = new mongoose.Schema({
 },{collection:'SchoolYears'});
 
 _schoolYear.pre('save', function(next) {
-    let currDate = new Date();
-    let month = currDate.getUTCMonth() + 1;
-    let year = currDate.getUTCFullYear();
-    let doc = this;
-    let yearRange = "";
-    if (month < 9) {
-        yearRange = year - 1 + ' - ' + year;
-    }
-    else
-    {
-        yearRange = year + ' - ' + year + 1;
-    }
-    doc.yearRange = yearRange;
+    this.yearRange = require('../config/getActiveYear')();
     next();
 });
 

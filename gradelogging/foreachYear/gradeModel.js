@@ -9,7 +9,8 @@ const _grade = new mongoose.Schema({
         enum: allowedGrades
     },
     points : {
-        type: Number
+        type: Number,
+        default: 0
     },
     comment : {
         type: String,

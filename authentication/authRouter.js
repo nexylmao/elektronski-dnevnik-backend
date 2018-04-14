@@ -13,6 +13,11 @@ const bcrypt = require('bcryptjs');
 const config = require('../config/secret');
 
 router.post('/register', (req, res, next) => {
+    if(process.env.ALLOWREGISTER != 'ENABLED')
+    {
+        console.log('Someone tried to register!');
+        return res.status(403).send('Registrations are not allowed at this time!');
+    }
     mongoose.connect(PATH, {dbName:'security'}, err => {
         if (err) {
             console.log(err.message);
