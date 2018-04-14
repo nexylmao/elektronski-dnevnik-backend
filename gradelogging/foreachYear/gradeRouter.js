@@ -5,8 +5,8 @@ const jwt = require('jsonwebtoken');
 const fetch = require('fetch');
 
 const Grade = require('./gradeModel');
-var thisYR = "";
-var dbName;
+var thisYR = require('../../config/getActiveYear')();
+var dbName = thisYR.substring(0,thisYR.indexOf(' '));
 
 const PATH = process.env.MONGODBPATH;
 const PORT = process.env.PORT;

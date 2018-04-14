@@ -43,6 +43,7 @@ router.all('*', (req, res, next) => {
         {
             body = JSON.parse(body);
             req.facilities = body.name;
+            console.log(req.facilities);
         }
         else {
             req.facilities = null;
@@ -221,7 +222,7 @@ router.post('/:name/student', (req, res, next) => {
             if (err) {
                 console.log(err.message);
             }
-            Class.find({name: req.params.name}, (err, doc) => {
+            Class.findOne({name: req.params.name}, (err, doc) => {
                 if (err) {
                     console.log(err.message);
                     return res.send(500).send('Internal server error!');
