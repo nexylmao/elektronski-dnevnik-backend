@@ -24,7 +24,11 @@ router.all('*', (req, res, next) => {
     } , (err, meta, body) => {
         if (err) {
             console.log(err.message);
-            return res.status(500).send('Internal server error while identifying you!');
+            return res.status(500).send({
+                good = false,
+                errMessage = err.message,
+                message = 'Error while gathering the data on you!'
+            });
         }
         req.user = JSON.parse(body);
         next();
@@ -38,7 +42,11 @@ router.all('*', (req, res, next) => {
         }}, (err, meta, body) => {
             if (err) {
                 console.log(err.message);
-                return res.status(500).send('Internal server error!');
+                return res.status(500).send({
+                    good = false,
+                    errMessage = err.message,
+                    message = 'Error while gathering the data on schoolyears!'
+                });
             }
             else {
                 body = JSON.parse(body)[0];
@@ -48,11 +56,17 @@ router.all('*', (req, res, next) => {
                         next();
                     }
                     else {
-                        return res.status(403).send('You can\'t edit that schoolYear! It\'s inactive!');
+                        return res.status(403).send({
+                            good = false,
+                            message = 'You can\'t edit that schoolYear! It\'s inactive!'
+                        });
                     }
                 }
                 else {
-                    return res.status(403).send('You can\'t edit that schoolYear! It\'s inactive!');
+                    return res.status(403).send({
+                        good = false,
+                        message = 'You can\'t edit that schoolYear! It\'s inactive!'
+                    });
                 }
             }
         });
@@ -68,6 +82,11 @@ router.get('/', (req, res, next) => {
         mongoose.connect(PATH, {dbName: req.databaseName}, err => {
             if (err) {
                 console.log(err.message);
+                return res.status(500).send({
+                    good = false,
+                    message = 'Error while connecting to the database!',
+                    errMessage = err.message
+                });
             }
             var query = {};
             var projection = {_id:0, _v:0, createdAt:0, updatedAt:0};
@@ -77,14 +96,24 @@ router.get('/', (req, res, next) => {
             Subject.find(query, projection, (err, doc) => {
                 if (err) {
                     console.log(err);
-                    return res.status(500).send('Internal server error!');
+                    return res.status(500).send({
+                        good = false,
+                        message = 'Error while querying the database!',
+                        errMessage = err.message
+                    });
                 }
-                res.status(200).send(doc);
+                res.status(200).send({
+                    good = true,
+                    data = doc
+                });
             });
         });
     }
     else {
-        return res.status(403).send('You don\'t have permission to do that!');
+        return res.status(403).send({
+            good = false,
+            message = 'You don\'t have permission for this!'
+        });
     }
 });
 
@@ -93,6 +122,11 @@ router.get('/byName/:name', (req, res, next) => {
         mongoose.connect(PATH, {dbName: req.databaseName}, err => {
             if (err) {
                 console.log(err.message);
+                return res.status(500).send({
+                    good = false,
+                    message = 'Error while connecting to the database!',
+                    errMessage = err.message
+                });
             }
             var query = {name: req.params.name};
             var projection = {_id:0, _v:0, createdAt:0, updatedAt:0};
@@ -102,14 +136,24 @@ router.get('/byName/:name', (req, res, next) => {
             Subject.find(query, projection, (err, doc) => {
                 if (err) {
                     console.log(err);
-                    return res.status(500).send('Internal server error!');
+                    return res.status(500).send({
+                        good = false,
+                        message = 'Error while querying the database!',
+                        errMessage = err.message
+                    });
                 }
-                res.status(200).send(doc);
+                res.status(200).send({
+                    good = true,
+                    data = doc
+                });
             });
         });
     }
     else {
-        return res.status(403).send('You don\'t have permission to do that!');
+        return res.status(403).send({
+            good = false,
+            message = 'You don\'t have permission for this!'
+        });
     }
 });
 
@@ -118,6 +162,11 @@ router.get('/profesor/:profesor', (req, res, next) => {
         mongoose.connect(PATH, {dbName: req.databaseName}, err => {
             if (err) {
                 console.log(err.message);
+                return res.status(500).send({
+                    good = false,
+                    message = 'Error while connecting to the database!',
+                    errMessage = err.message
+                });
             }
             var query = {profesors: {$in:[req.params.profesor]}};
             var projection = {_id:0, _v:0, createdAt:0, updatedAt:0};
@@ -127,14 +176,24 @@ router.get('/profesor/:profesor', (req, res, next) => {
             Subject.find(query, projection, (err, doc) => {
                 if (err) {
                     console.log(err);
-                    return res.status(500).send('Internal server error!');
+                    return res.status(500).send({
+                        good = false,
+                        message = 'Error while querying the database!',
+                        errMessage = err.message
+                    });
                 }
-                res.status(200).send(doc);
+                res.status(200).send({
+                    good = true,
+                    data = doc
+                });
             });
         });
     }
     else {
-        return res.status(403).send('You don\'t have permission to do that!');
+        return res.status(403).send({
+            good = false,
+            message = 'You don\'t have permission for this!'
+        });
     }
 });
 
@@ -143,6 +202,11 @@ router.post('/', (req, res, next) => {
         mongoose.connect(PATH, {dbName: req.databaseName}, err => {
             if (err) {
                 console.log(err.message);
+                return res.status(500).send({
+                    good = false,
+                    message = 'Error while connecting to the database!',
+                    errMessage = err.message
+                });
             }
             var newsubj = {
                 name : req.body.name,
@@ -152,14 +216,24 @@ router.post('/', (req, res, next) => {
             Subject.create(newsubj, (err, doc) => {
                 if (err) {
                     console.log(err);
-                    return res.status(500).send('Internal server error!');
+                    return res.status(500).send({
+                        good = false,
+                        message = 'Error while inserting in the database!',
+                        errMessage = err.message
+                    });
                 }
-                res.status(200).send(doc);
+                res.status(200).send({
+                    good = true,
+                    data = doc
+                });
             });
         });
     }
     else {
-        return res.status(403).send('You don\'t have permission to do that!');
+        return res.status(403).send({
+            good = false,
+            message = 'You don\'t have permission for this!'
+        });
     }
 });
 
@@ -168,18 +242,33 @@ router.post('/:name/profesor', (req, res, next) => {
         mongoose.connect(PATH, {dbName: req.databaseName}, err => {
             if (err) {
                 console.log(err.message);
+                return res.status(500).send({
+                    good = false,
+                    message = 'Error while connecting to the database!',
+                    errMessage = err.message
+                });
             }
             Subject.findOneAndUpdate({name: req.params.name}, {$push : {profesors:req.body.profesorName}},{new:true}, (err, doc) => {
                 if (err) {
                     console.log(err);
-                    return res.status(500).send('Internal server error!');
+                    return res.status(500).send({
+                        good = false,
+                        message = 'Error while inserting in the database!',
+                        errMessage = err.message
+                    });
                 }
-                res.status(200).send(doc);
+                res.status(200).send({
+                    good = true,
+                    data = doc
+                });
             });
         });
     }
     else {
-        return res.status(403).send('You don\'t have permission to do that!');
+        return res.status(403).send({
+            good = false,
+            message = 'You don\'t have permission for this!'
+        });
     }
 });
 
@@ -188,18 +277,33 @@ router.put('/:name', (req, res, next) => {
         mongoose.connect(PATH, {dbName: req.databaseName}, err => {
             if (err) {
                 console.log(err.message);
+                return res.status(500).send({
+                    good = false,
+                    message = 'Error while connecting to the database!',
+                    errMessage = err.message
+                });
             }
             Subject.findOneAndUpdate({name: req.params.name},req.body,{new:true}, (err, doc) => {
                 if (err) {
                     console.log(err);
-                    return res.status(500).send('Internal server error!');
+                    return res.status(500).send({
+                        good = false,
+                        message = 'Error while editing a document in the database!',
+                        errMessage = err.message
+                    });
                 }
-                res.status(200).send(doc);
+                res.status(200).send({
+                    good = true,
+                    data = doc
+                });
             });
         });
     }
     else {
-        return res.status(403).send('You don\'t have permission to do that!');
+        return res.status(403).send({
+            good = false,
+            message = 'You don\'t have permission for this!'
+        });
     }
 });
 
@@ -208,18 +312,33 @@ router.delete('/:name', (req, res, next) => {
         mongoose.connect(PATH, {dbName: req.databaseName}, err => {
             if (err) {
                 console.log(err.message);
+                return res.status(500).send({
+                    good = false,
+                    message = 'Error while connecting to the database!',
+                    errMessage = err.message
+                });
             }
             Subject.findOneAndRemove({name: req.params.name}, (err, doc) => {
                 if (err) {
                     console.log(err);
-                    return res.status(500).send('Internal server error!');
+                    return res.status(500).send({
+                        good = false,
+                        message = 'Error while deleting a document in the database!',
+                        errMessage = err.message
+                    });
                 }
-                res.status(200).send(doc);
+                res.status(200).send({
+                    good = true,
+                    data = doc
+                });
             });
         });
     }
     else {
-        return res.status(403).send('You don\'t have permission to do that!');
+        return res.status(403).send({
+            good = false,
+            message = 'You don\'t have permission for this!'
+        });
     }
 });
 
@@ -228,18 +347,33 @@ router.delete('/:name/profesor', (req, res, next) => {
         mongoose.connect(PATH, {dbName: req.databaseName}, err => {
             if (err) {
                 console.log(err.message);
+                return res.status(500).send({
+                    good = false,
+                    message = 'Error while connecting to the database!',
+                    errMessage = err.message
+                });
             }
             Subject.findOneAndUpdate({name: req.params.name}, {$pull : {profesors:req.body.profesorName}},{new:true}, (err, doc) => {
                 if (err) {
                     console.log(err);
-                    return res.status(500).send('Internal server error!');
+                    return res.status(500).send({
+                        good = false,
+                        message = 'Error while deleting a document in the database!',
+                        errMessage = err.message
+                    });
                 }
-                res.status(200).send(doc);
+                res.status(200).send({
+                    good = true,
+                    data = doc
+                });
             });
         });
     }
     else {
-        return res.status(403).send('You don\'t have permission to do that!');
+        return res.status(403).send({
+            good = false,
+            message = 'You don\'t have permission for this!'
+        });
     }
 });
 

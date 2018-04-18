@@ -18,7 +18,11 @@ router.all('*', (req, res, next) => {
         (err, meta, body) => {
         if (err) {
             console.log(err.message);
-            return res.status(500).send('Internal server error while identifying you!');
+            return res.status(500).send({
+                good = false,
+                errMessage = err.message,
+                message = 'Error while gathering the data on you!'
+            });
         }
         req.user = JSON.parse(body);
         next();
@@ -45,22 +49,39 @@ router.get('/', (req, res, next) => {
         mongoose.connect(PATH, {dbName:'security'}, err => {
             if (err) {
                 console.log(err.message);
-                return res.status(500).send('Something went wrong while connecting to the database!');
+                return res.status(500).send({
+                    good = false,
+                    message = 'Error while connecting to the database!',
+                    errMessage = err.message
+                });
             }
             User.find(query,projection, (err, docs) => {
                 if (err) {
                     console.log(err.message);
-                    return res.status(500).send('Internal server error while searching for users!');
+                    return res.status(500).send({
+                        good = false,
+                        message = 'Error while querying the database!',
+                        errMessage = err.message
+                    });
                 }
                 if (!docs) {
-                    return res.status(404).send('No users found!');
+                    return res.status(404).send({
+                        good = false,
+                        message = 'Query found no users!'
+                    });
                 }
-                return res.status(200).send(docs);
+                return res.status(200).send({
+                    good = true,
+                    data = docs
+                });
             });
         });
     }
     else {
-        return res.status(403).send('You don\'t have permission for that!');
+        return res.status(403).send({
+            good = false,
+            message = 'You don\'t have permission for this!'
+        });
     }
 });
 
@@ -84,22 +105,39 @@ router.get('/:identification', (req, res, next) => {
         mongoose.connect(PATH, {dbName:'security'}, err => {
             if (err) {
                 console.log(err.message);
-                return res.status(500).send('Something went wrong while connecting to the database!');
+                return res.status(500).send({
+                    good = false,
+                    message = 'Error while connecting to the database!',
+                    errMessage = err.message
+                });
             }
             User.find(query,projection, (err, docs) => {
                 if (err) {
                     console.log(err.message);
-                    return res.status(500).send('Internal server error while searching for users!');
+                    return res.status(500).send({
+                        good = false,
+                        message = 'Error while querying the database!',
+                        errMessage = err.message
+                    });
                 }
                 if (!docs) {
-                    return res.status(404).send('No users found!');
+                    return res.status(404).send({
+                        good = false,
+                        message = 'Query found no users!'
+                    });
                 }
-                return res.status(200).send(docs);
+                return res.status(200).send({
+                    good = true,
+                    data = docs
+                });
             });
         });
     }
     else {
-        return res.status(403).send('You don\'t have permission for that!');
+        return res.status(403).send({
+            good = false,
+            message = 'You don\'t have permission for this!'
+        });
     }
 });
 
@@ -123,22 +161,39 @@ router.get('/byType/:type', (req, res, next) => {
         mongoose.connect(PATH, {dbName:'security'}, err => {
             if (err) {
                 console.log(err.message);
-                return res.status(500).send('Something went wrong while connecting to the database!');
+                return res.status(500).send({
+                    good = false,
+                    message = 'Error while connecting to the database!',
+                    errMessage = err.message
+                });
             }
             User.find(query,projection, (err, docs) => {
                 if (err) {
                     console.log(err.message);
-                    return res.status(500).send('Internal server error while searching for users!');
+                    return res.status(500).send({
+                        good = false,
+                        message = 'Error while querying the database!',
+                        errMessage = err.message
+                    });
                 }
                 if (!docs) {
-                    return res.status(404).send('No users found!');
+                    return res.status(404).send({
+                        good = false,
+                        message = 'Query found no users!'
+                    });
                 }
-                return res.status(200).send(docs);
+                return res.status(200).send({
+                    good = true,
+                    data = docs
+                });
             });
         });
     }
     else {
-        return res.status(403).send('You don\'t have permission for that!');
+        return res.status(403).send({
+            good = false,
+            message = 'You don\'t have permission for this!'
+        });
     }
 });
 
@@ -147,11 +202,18 @@ router.post('/', (req, res, next) => {
         mongoose.connect(PATH, {dbName:'security'}, err => {
             if (err) {
                 console.log(err.message);
-                return res.status(500).send('Something went wrong while connecting to the database!');
+                return res.status(500).send({
+                    good = false,
+                    message = 'Error while connecting to the database!',
+                    errMessage = err.message
+                });
             }
             if (req.user.accountType === "Moderator" && (req.body.accountType === "Moderator" || req.body.accountType === "Administrator"))
             {
-                return res.status(403).send('You can\'t create a moderator or administrator!');
+                return res.status(403).send({
+                    good = false,
+                    message = 'You can\'t create a moderator or administrator!'
+                });
             }
             User.create({
                 email : req.body.email,
@@ -163,15 +225,26 @@ router.post('/', (req, res, next) => {
             (err, user) => {
                 if (err) {
                     console.log(err.message);
-                    return res.status(500).send('There was a problem while adding the data to the database!');
+                    return res.status(500).send({
+                        good = false,
+                        message = 'Error while inserting in the database!',
+                        errMessage = err.message
+                    });
                 }
-                return res.status(201).send('Successfully created account!');
+                return res.status(201).send({
+                    good = true,
+                    data = user,
+                    message = 'Successfully created account!'
+                });
             });
         });
     }
     else
     {
-        return res.status(401).send('You dont have the permission to do this!');
+        return res.status(403).send({
+            good = false,
+            message = 'You don\'t have permission for this!'
+        });
     }
 });
 
@@ -180,24 +253,41 @@ router.put('/:identification', (req, res, next) => {
         mongoose.connect(PATH, {dbName:'security'}, err => {
             if (err) {
                 console.log(err.message);
-                return res.status(500).send('Something went wrong while connecting to the database!');
+                return res.status(500).send({
+                    good = false,
+                    message = 'Error while connecting to the database!',
+                    errMessage = err.message
+                });
             }
             var query = {$or : [{username:req.params.identification},{email:req.params.identification}]};
             User.findOneAndUpdate(query, req.body, {new: true}, (err, user) => {
                 if ((user.accountType === "Administrator" || user.accountType === "Moderator") && req.user.accountType === "Moderator") {
-                    return res.status(403).send('You can\'t change an administrator or moderator!');
+                    return res.status(403).send({
+                        good = false,
+                        message = 'You can\'t change an administrator or moderator!'
+                    });
                 }
                 if (err) {
                     console.log(err.message);
-                    return res.status(500).send("There was a problem updating the user.");
+                    return res.status(500).send({
+                        good = false,
+                        message = 'Error while editing a document in the database!',
+                        errMessage = err.message
+                    });
                 }
-                res.status(200).send(user);
+                return res.status(200).send({
+                    good = true,
+                    data = user
+                });
             });
         });
     }
     else
     {
-        return res.status(401).send('You dont have the permission to do this!');
+        return res.status(403).send({
+            good = false,
+            message = 'You don\'t have permission for this!'
+        });
     }
 });
 
@@ -206,24 +296,41 @@ router.delete('/:identification', (req, res, next) => {
         mongoose.connect(PATH, {dbName:'security'}, err => {
             if (err) {
                 console.log(err.message);
-                return res.status(500).send('Something went wrong while connecting to the database!');
+                return res.status(500).send({
+                    good = false,
+                    message = 'Error while connecting to the database!',
+                    errMessage = err.message
+                });
             }
             var query = {$or : [{username:req.params.identification},{email:req.params.identification}]};
             User.findOneAndRemove(query, (err, user) => {
                 if ((user.accountType === "Administrator" || user.accountType === "Moderator") && req.user.accountType === "Moderator") {
-                    return res.status(403).send('You can\'t delete an administrator or moderator!');
+                    return res.status(403).send({
+                        good = false,
+                        message = 'You can\'t delete an administrator or moderator!'
+                    });
                 }
                 if (err) {
                     console.log(err.message);
-                    return res.status(500).send("There was a problem deleting the user!");
+                    return res.status(500).send({
+                        good = false,
+                        message = 'Error while deleting a document in the database!',
+                        errMessage = err.message
+                    });
                 }
-                res.status(200).send("User "+ user.name +" was deleted. :c");
+                res.status(200).send({
+                    good = true,
+                    message = "User "+ user.name +" was deleted. :c"
+                });
             });
         });
     }
     else
     {
-        return res.status(401).send('You dont have the permission to do this!');
+        return res.status(403).send({
+            good = false,
+            message = 'You don\'t have permission for this!'
+        });
     }
 });
 

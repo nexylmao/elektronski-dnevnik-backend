@@ -22,7 +22,11 @@ router.all('*', (req, res, next) => {
     } , (err, meta, body) => {
         if (err) {
             console.log(err.message);
-            return res.status(500).send('Internal server error while identifying you!');
+            return res.status(500).send({
+                good = false,
+                errMessage = err.message,
+                message = 'Error while gathering the data on you!'
+            });
         }
         req.user = JSON.parse(body);
         next();
@@ -34,20 +38,34 @@ router.get('/', (req, res, next) => {
         mongoose.connect(PATH, {dbName: 'meta'}, err => {
             if (err) {
                 console.log(err.message);
-                return res.status(500).send('Internal server error while connecting to the database!');
+                return res.status(500).send({
+                    good = false,
+                    message = 'Error while connecting to the database!',
+                    errMessage = err.message
+                });
             }
             SY.find({}, (err, docs) => {
                 if (err) {
                     console.log(err.message);
-                    return res.status(500).send('Internal server error!');
+                    return res.status(500).send({
+                        good = false,
+                        message = 'Error while querying the database!',
+                        errMessage = err.message
+                    });
                 }
-                return res.status(200).send(docs);
+                return res.status(200).send({
+                    good = true, 
+                    data = docs
+                });
             });
         });
     }
     else
     {
-        return res.status(401).send('You dont have the permission to do this!');
+        return res.status(403).send({
+            good = false,
+            message = 'You don\'t have permission for this!'
+        });
     }
 });
 
@@ -56,20 +74,34 @@ router.get('/now', (req, res, body) => {
         mongoose.connect(PATH, {dbName: 'meta'}, err => {
             if (err) {
                 console.log(err.message);
-                return res.status(500).send('Internal server error while connecting to the database!');
+                return res.status(500).send({
+                    good = false,
+                    message = 'Error while connecting to the database!',
+                    errMessage = err.message
+                });
             }
-            SY.find({yearRange:require('../../config/getActiveYear')()}, (err, doc) => {
+            SY.find({yearRange:(require('../../config/getActiveYear')())}, (err, doc) => {
                 if (err) {
                     console.log(err.message);
-                    return res.status(500).send('Internal server error!');
+                    return res.status(500).send({
+                        good = false,
+                        message = 'Error while querying the database!',
+                        errMessage = err.message
+                    });
                 }
-                return res.status(200).send(doc);
+                return res.status(200).send({
+                    good = true,
+                    data = doc
+                });
             });
         });
     }
     else
     {
-        return res.status(401).send('You dont have the permission to do this!');
+        return res.status(403).send({
+            good = false,
+            message = 'You don\'t have permission for this!'
+        });
     }
 });
 
@@ -78,20 +110,34 @@ router.get('/:yearRange', (req, res, body) => {
         mongoose.connect(PATH, {dbName: 'meta'}, err => {
             if (err) {
                 console.log(err.message);
-                return res.status(500).send('Internal server error while connecting to the database!');
+                return res.status(500).send({
+                    good = false,
+                    message = 'Error while connecting to the database!',
+                    errMessage = err.message
+                });
             }
             SY.find({yearRange:req.params.yearRange}, (err, doc) => {
                 if (err) {
                     console.log(err.message);
-                    return res.status(500).send('Internal server error!');
+                    return res.status(500).send({
+                        good = false,
+                        message = 'Error while querying the database!',
+                        errMessage = err.message
+                    });
                 }
-                return res.status(200).send(doc);
+                return res.status(200).send({
+                    good = true,
+                    data = doc
+                });
             });
         });
     }
     else
     {
-        return res.status(401).send('You dont have the permission to do this!');
+        return res.status(403).send({
+            good = false,
+            message = 'You don\'t have permission for this!'
+        });
     }
 });
 
@@ -100,20 +146,34 @@ router.post('/', (req, res, next) => {
         mongoose.connect(PATH, {dbName: 'meta'}, err => {
             if (err) {
                 console.log(err.message);
-                return res.status(500).send('Internal server error while connecting to the database!');
+                return res.status(500).send({
+                    good = false,
+                    message = 'Error while connecting to the database!',
+                    errMessage = err.message
+                });
             }
-            SY.create({active:true}, (err, data) => {
+            SY.create({active:true}, (err, doc) => {
                 if (err) {
                     console.log(err.message);
-                    return res.status(500).send('Internal sever error while creting the SchoolYear!');
+                    return res.status(500).send({
+                        good = false,
+                        message = 'Error while inserting in the database!',
+                        errMessage = err.message
+                    });
                 }
-                return res.status(200).send(data);
+                return res.status(200).send({
+                    good = true,
+                    data = doc
+                });
             });
         });
     }
     else
     {
-        return res.status(401).send('You dont have the permission to do this!');
+        return res.status(403).send({
+            good = false,
+            message = 'You don\'t have permission for this!'
+        });
     }
 });
 
@@ -122,32 +182,53 @@ router.post('/:yearRange/facilities', (req, res, body) => {
         mongoose.connect(PATH, {dbName: 'meta'}, err => {
             if (err) {
                 console.log(err.message);
-                return res.status(500).send('Internal server error while connecting to the database!');
+                return res.status(500).send({
+                    good = false,
+                    message = 'Error while connecting to the database!',
+                    errMessage = err.message
+                });
             }
             SY.findOne({yearRange: req.params.yearRange}, (err, docs) => {
                 if (err) {
                     console.log(err.message);
-                    return res.status(500).send('Internal server error!');
+                    return res.status(500).send({
+                        good = false,
+                        message = 'Error while querying the database!',
+                        errMessage = err.message
+                    });
                 }
                 if (docs.active === true)
                 {
                     SY.updateOne({yearRange:req.params.yearRange}, {$push: {facilities: req.body.facilityName}}, (err, doc) => {
                         if (err) {
                             console.log(err.message);
-                            return res.status(500).send('Internal server error while adding the facility to the year!');
+                            return res.status(500).send({
+                                good = false,
+                                message = 'Error while editing a document in the database!',
+                                errMessage = err.message
+                            });
                         }
-                        return res.status(200).send(doc);
+                        return res.status(200).send({
+                            good = true,
+                            data = doc
+                        });
                     });
                 }
                 else {
-                    return res.status(410).send('The SchoolYear is now inactive, so it cannot be edited!');
+                    return res.status(410).send({
+                        good = false,
+                        message = 'The SchoolYear is now inactive, so it cannot be edited!'
+                    });
                 }
             });
         });
     }
     else
     {
-        return res.status(401).send('You dont have the permission to do this!');
+        return res.status(403).send({
+            good = false,
+            message = 'You don\'t have permission for this!'
+        });
     }
 });
 
@@ -156,32 +237,53 @@ router.post('/:yearRange/profesors', (req, res, body) => {
         mongoose.connect(PATH, {dbName: 'meta'}, err => {
             if (err) {
                 console.log(err.message);
-                return res.status(500).send('Internal server error while connecting to the database!');
+                return res.status(500).send({
+                    good = false,
+                    message = 'Error while connecting to the database!',
+                    errMessage = err.message
+                });
             }
             SY.findOne({yearRange: req.params.yearRange}, (err, docs) => {
                 if (err) {
                     console.log(err.message);
-                    return res.status(500).send('Internal server error!');
+                    return res.status(500).send({
+                        good = false,
+                        message = 'Error while querying the database!',
+                        errMessage = err.message
+                    });
                 }
                 if (docs.active == true)
                 {
                     SY.updateOne({yearRange:req.params.yearRange}, {$push: {profesors: req.body.profesorName}}, (err, doc) => {
                         if (err) {
                             console.log(err.message);
-                            return res.status(500).send('Internal server error while adding the facility to the year!');
+                            return res.status(500).send({
+                                good = false,
+                                message = 'Error while editing a document in the database!',
+                                errMessage = err.message
+                            });
                         }
-                        return res.status(200).send(doc);
+                        return res.status(200).send({
+                            good = true,
+                            data = doc
+                        });
                     });
                 }
                 else {
-                    return res.status(410).send('The SchoolYear is now inactive, so it cannot be edited!');
+                    return res.status(410).send({
+                        good = false,
+                        message = 'The SchoolYear is now inactive, so it cannot be edited!'
+                    });
                 }
             });
         });
     }
     else
     {
-        return res.status(401).send('You dont have the permission to do this!');
+        return res.status(403).send({
+            good = false,
+            message = 'You don\'t have permission for this!'
+        });
     }
 });
 
@@ -190,20 +292,34 @@ router.post('/:yearRange/deactivate', (req, res, body) => {
         mongoose.connect(PATH, {dbName: 'meta'}, err => {
             if (err) {
                 console.log(err.message);
-                return res.status(500).send('Internal server error while connecting to the database!');
+                return res.status(500).send({
+                    good = false,
+                    message = 'Error while connecting to the database!',
+                    errMessage = err.message
+                });
             }
             SY.updateOne({yearRange:req.params.yearRange}, {active : false}, (err, doc) => {
                 if (err) {
                     console.log(err.message);
-                    return res.status(500).send('Internal server error while adding the facility to the year!');
+                    return res.status(500).send({
+                        good = false,
+                        message = 'Error while editing a document in the database!',
+                        errMessage = err.message
+                    });
                 }
-                return res.status(200).send(doc);
+                return res.status(200).send({
+                    good = true,
+                    data = doc
+                });
             });
         });
     }
     else
     {
-        return res.status(401).send('You dont have the permission to do this!');
+        return res.status(403).send({
+            good = false,
+            message = 'You don\'t have permission for this!'
+        });
     }
 });
 
@@ -212,20 +328,34 @@ router.post('/:yearRange/activate', (req, res, body) => {
         mongoose.connect(PATH, {dbName: 'meta'}, err => {
             if (err) {
                 console.log(err.message);
-                return res.status(500).send('Internal server error while connecting to the database!');
+                return res.status(500).send({
+                    good = false,
+                    message = 'Error while connecting to the database!',
+                    errMessage = err.message
+                });
             }
             SY.updateOne({yearRange:req.params.yearRange}, {active : true}, (err, doc) => {
                 if (err) {
                     console.log(err.message);
-                    return res.status(500).send('Internal server error while adding the facility to the year!');
+                    return res.status(500).send({
+                        good = false,
+                        message = 'Error while editing a document in the database!',
+                        errMessage = err.message
+                    });
                 }
-                return res.status(200).send(doc);
+                return res.status(200).send({
+                    good = true,
+                    data = doc
+                });
             });
         });
     }
     else
     {
-        return res.status(401).send('You dont have the permission to do this!');
+        return res.status(403).send({
+            good = false,
+            message = 'You don\'t have permission for this!'
+        });
     }
 });
 
@@ -234,32 +364,53 @@ router.delete('/:yearRange/profesors/', (req, res, next) => {
         mongoose.connect(PATH, {dbName: 'meta'}, err => {
             if (err) {
                 console.log(err.message);
-                return res.status(500).send('Internal server error while connecting to the database!');
+                return res.status(500).send({
+                    good = false,
+                    message = 'Error while connecting to the database!',
+                    errMessage = err.message
+                });
             }
             SY.findOne({yearRange: req.params.yearRange}, (err, docs) => {
                 if (err) {
                     console.log(err.message);
-                    return res.status(500).send('Internal server error!');
+                    return res.status(500).send({
+                        good = false,
+                        message = 'Error while editing querying the database!',
+                        errMessage = err.message
+                    });
                 }
                 if (docs.active == true)
                 {
                     SY.updateOne({yearRange:req.params.yearRange}, {$pull : {profesors:req.body.profesorName}}, (err, doc) => {
                         if (err) {
                             console.log(err.message);
-                            return res.status(500).send('Internal server error while adding the facility to the year!');
+                            return res.status(500).send({
+                                good = false,
+                                message = 'Error while editing a document in the database!',
+                                errMessage = err.message
+                            });
                         }
-                        return res.status(200).send(doc);
+                        return res.status(200).send({
+                            good = true,
+                            data = doc
+                        });
                     });
                 }
                 else {
-                    return res.status(410).send('The SchoolYear is now inactive, so it cannot be edited!');
+                    return res.status(410).send({
+                        good = false,
+                        message = 'The SchoolYear is now inactive, so it cannot be edited!'
+                    });
                 }
             });
         });
     }
     else
     {
-        return res.status(401).send('You dont have the permission to do this!');
+        return res.status(403).send({
+            good = false,
+            message = 'You don\'t have permission for this!'
+        });
     }
 });
 
@@ -268,32 +419,53 @@ router.delete('/:yearRange/facilities/', (req, res, next) => {
         mongoose.connect(PATH, {dbName: 'meta'}, err => {
             if (err) {
                 console.log(err.message);
-                return res.status(500).send('Internal server error while connecting to the database!');
+                return res.status(500).send({
+                    good = false,
+                    message = 'Error while connecting to the database!',
+                    errMessage = err.message
+                });
             }
             SY.findOne({yearRange: req.params.yearRange}, (err, docs) => {
                 if (err) {
                     console.log(err.message);
-                    return res.status(500).send('Internal server error!');
+                    return res.status(500).send({
+                        good = false,
+                        message = 'Error while querying the database!',
+                        errMessage = err.message
+                    });
                 }
                 if (docs.active == true)
                 {
                     SY.updateOne({yearRange:req.params.yearRange}, {$pull : {facilities:req.body.facilityName}}, (err, doc) => {
                         if (err) {
                             console.log(err.message);
-                            return res.status(500).send('Internal server error while adding the facility to the year!');
+                            return res.status(500).send({
+                                good = false,
+                                message = 'Error while editing a document in the database!',
+                                errMessage = err.message
+                            });
                         }
-                        return res.status(200).send(doc);
+                        return res.status(200).send({
+                            good = true,
+                            data = doc
+                        });
                     });
                 }
                 else {
-                    return res.status(410).send('The SchoolYear is now inactive, so it cannot be edited!');
+                    return res.status(410).send({
+                        good = false,
+                        message = 'The SchoolYear is now inactive, so it cannot be edited!'
+                    });
                 }
             });
         });
     }
     else
     {
-        return res.status(401).send('You dont have the permission to do this!');
+        return res.status(403).send({
+            good = false,
+            message = 'You don\'t have permission for this!'
+        });
     }
 });
 

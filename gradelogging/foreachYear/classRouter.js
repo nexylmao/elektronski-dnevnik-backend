@@ -24,7 +24,11 @@ router.all('*', (req, res, next) => {
     } , (err, meta, body) => {
         if (err) {
             console.log(err.message);
-            return res.status(500).send('Internal server error while identifying you!');
+            return res.status(500).send({
+                good = false,
+                errMessage = err.message,
+                message = 'Error while gathering the data on you!'
+            });
         }
         req.user = JSON.parse(body);
         next();
@@ -37,13 +41,16 @@ router.all('*', (req, res, next) => {
         }, (err, meta, body) => {
         if (err) {
             console.log(err.message);
-            return res.status(500).send('Internal server error!');
+            return res.status(500).send({
+                good = false,
+                errMessage = err.message,
+                message = 'Error while gathering the data on your main facility!'
+            });
         }
         if(req.user.accountType === "Moderator")
         {
             body = JSON.parse(body);
-            req.facilities = body.name;
-            console.log(req.facilities);
+            req.facilities = body.data.name;
         }
         else {
             req.facilities = null;
@@ -59,7 +66,11 @@ router.all('*', (req, res, next) => {
         }}, (err, meta, body) => {
             if (err) {
                 console.log(err.message);
-                return res.status(500).send('Internal server error!');
+                return res.status(500).send({
+                    good = false,
+                    errMessage = err.message,
+                    message = 'Error while gathering the data on schoolyears!'
+                });
             }
             else {
                 body = JSON.parse(body)[0];
@@ -69,11 +80,17 @@ router.all('*', (req, res, next) => {
                         next();
                     }
                     else {
-                        return res.status(403).send('You can\'t edit that schoolYear! It\'s inactive!');
+                        return res.status(403).send({
+                            good = false,
+                            message = 'You can\'t edit that schoolYear! It\'s inactive!'
+                        });
                     }
                 }
                 else {
-                    return res.status(403).send('You can\'t edit that schoolYear! It\'s inactive!');
+                    return res.status(403).send({
+                        good = false,
+                        message = 'You can\'t edit that schoolYear! It\'s inactive!'
+                    });
                 }
             }
         });
@@ -89,6 +106,11 @@ router.get('/', (req, res, next) => {
         mongoose.connect(PATH, {dbName: req.databaseName}, err => {
             if (err) {
                 console.log(err.message);
+                return res.status(500).send({
+                    good = false,
+                    message = 'Error while connecting to the database!',
+                    errMessage = err.message
+                });
             }
             var query = {$or : [{students: {$in : [req.user.username]}},{parents: {$in : [req.user.username]}}]}; 
             var projection = {_id:0, _v:0, updatedAt:0, createdAt:0};
@@ -105,14 +127,24 @@ router.get('/', (req, res, next) => {
             Class.find(query, projection, (err, docs) => {
                 if (err) {
                     console.log(err.message);
-                    return res.status(500).send('Internal server error!');
+                    return res.status(500).send({
+                        good = false,
+                        message = 'Error while querying the database!',
+                        errMessage = err.message
+                    });
                 }
-                res.status(200).send(docs);
+                res.status(200).send({
+                    good = true,
+                    data = docs
+                });
             });
         });
     }
     else {
-        return res.status(403).send('You don\'t have permission to do that!');
+        return res.status(403).send({
+            good = false,
+            message = 'You don\'t have permission for this!'
+        });
     }
 });
 
@@ -121,6 +153,11 @@ router.get('/:name', (req, res, next) => {
         mongoose.connect(PATH, {dbName: req.databaseName}, err => {
             if (err) {
                 console.log(err.message);
+                return res.status(500).send({
+                    good = false,
+                    message = 'Error while connecting to the database!',
+                    errMessage = err.message
+                });
             }
             var query = {$and : [{name: req.params.name},{$or : [{students: {$in : [req.user.username]}},{parents: {$in : [req.user.username]}}]}]}; 
             var projection = {_id:0, _v:0, updatedAt:0, createdAt:0};
@@ -137,14 +174,24 @@ router.get('/:name', (req, res, next) => {
             Class.find(query, projection, (err, docs) => {
                 if (err) {
                     console.log(err.message);
-                    return res.status(500).send('Internal server error!');
+                    return res.status(500).send({
+                        good = false,
+                        message = 'Error while querying the database!',
+                        errMessage = err.message
+                    });
                 }
-                res.status(200).send(docs);
+                res.status(200).send({
+                    good = true,
+                    data = docs
+                });
             });
         });
     }
     else {
-        return res.status(403).send('You don\'t have permission to do that!');
+        return res.status(403).send({
+            good = false,
+            message = 'You don\'t have permission for this!'
+        });
     }
 });
 
@@ -153,6 +200,11 @@ router.post('/', (req, res, next) => {
         mongoose.connect(PATH, {dbName: req.databaseName}, err => {
             if (err) {
                 console.log(err.message);
+                return res.status(500).send({
+                    good = false,
+                    message = 'Error while connecting to the database!',
+                    errMessage = err.message
+                });
             }
             let fac;
             if (req.user.accountType === "Moderator") {
@@ -173,398 +225,672 @@ router.post('/', (req, res, next) => {
             Class.create(newclass, (err, doc) => {
                 if (err) {
                     console.log(err.message);
-                    return res.status(500).send('Internal server error!');
+                    return res.status(500).send({
+                        good = false,
+                        message = 'Error while inserting in the database!',
+                        errMessage = err.message
+                    });
                 }
-                res.status(200).send(doc);
+                res.status(200).send({
+                    good = true,
+                    data = doc
+                });
             });
         });
     }
     else {
-        return res.status(403).send('You don\'t have permission to do that!');
+        return res.status(403).send({
+            good = false,
+            message = 'You don\'t have permission for this!'
+        });
     }
 });
 
 router.post('/:name/homeTeacher', (req, res, next) => {
-    if (req.user.accountType) {
+    if (req.user.accountType == 'Administrator' || req.user.accountType == 'Moderator') {
         mongoose.connect(PATH, {dbName: req.databaseName}, err => {
             if (err) {
                 console.log(err.message);
+                return res.status(500).send({
+                    good = false,
+                    message = 'Error while connecting to the database!',
+                    errMessage = err.message
+                });
             }
             Class.find({name: req.params.name}, (err, doc) => {
                 if (err) {
                     console.log(err.message);
-                    return res.send(500).send('Internal server error!');
+                    return res.status(500).send({
+                        good = false,
+                        message = 'Error while querying the database!',
+                        errMessage = err.message
+                    });
                 }
                 if((req.user.accountType === "Moderator" && doc.facility === req.facilities) || req.user.accountType === "Administrator")
                 {
                     Class.findOneAndUpdate({name: req.params.name}, {$push:{homeTeachers:req.body.teacherName}}, {new:true}, (err, doc) => {
                         if (err) {
                             console.log(err.message);
-                            return res.send(500).send('Internal server error!');
+                            return res.status(500).send({
+                                good = false,
+                                message = 'Error while editing a document in the database!',
+                                errMessage = err.message
+                            });
                         }
-                        res.status(200).send(doc);
+                        res.status(200).send({
+                            good = true,
+                            data = doc
+                        });
                     });
                 }
                 else {
-                    return res.status(403).send('You\'re not the moderator of that facility!');
+                    return res.status(403).send({
+                        good = false,
+                        message = 'You\'re not the moderator of that facility!'
+                    });
                 }
             });
         });
     }
     else {
-        return res.status(403).send('You don\'t have permission to do that!');
+        return res.status(403).send({
+            good = false,
+            message = 'You don\'t have permission for this!'
+        });
     }
 });
 
 router.post('/:name/student', (req, res, next) => {
-    if (req.user.accountType) {
+    if (req.user.accountType == 'Administrator' || req.user.accountType == 'Moderator') {
         mongoose.connect(PATH, {dbName: req.databaseName}, err => {
             if (err) {
                 console.log(err.message);
+                return res.status(500).send({
+                    good = false,
+                    message = 'Error while connecting to the database!',
+                    errMessage = err.message
+                });
             }
             Class.findOne({name: req.params.name}, (err, doc) => {
                 if (err) {
                     console.log(err.message);
-                    return res.send(500).send('Internal server error!');
+                    return res.status(500).send({
+                        good = false,
+                        message = 'Error while querying the database!',
+                        errMessage = err.message
+                    });
                 }
                 if((req.user.accountType === "Moderator" && doc.facility === req.facilities) || req.user.accountType === "Administrator")
                 {
                     Class.findOneAndUpdate({name: req.params.name}, {$push:{students:req.body.studentName}}, {new:true}, (err, doc) => {
                         if (err) {
                             console.log(err.message);
-                            return res.send(500).send('Internal server error!');
+                            return res.status(500).send({
+                                good = false,
+                                message = 'Error while editing a document in the database!',
+                                errMessage = err.message
+                            });
                         }
-                        res.status(200).send(doc);
+                        res.status(200).send({
+                            good = true,
+                            data = doc
+                        });
                     });
                 }
                 else {
-                    return res.status(403).send('You\'re not the moderator of that facility!');
+                    return res.status(403).send({
+                        good = false,
+                        message = 'You\'re not the moderator of that facility!'
+                    });
                 }
             });
         });
     }
     else {
-        return res.status(403).send('You don\'t have permission to do that!');
+        return res.status(403).send({
+            good = false,
+            message = 'You don\'t have permission for this!'
+        });
     }
 });
 
 router.post('/:name/parent', (req, res, next) => {
-    if (req.user.accountType) {
+    if (req.user.accountType == 'Administrator' || req.user.accountType == 'Moderator') {
         mongoose.connect(PATH, {dbName: req.databaseName}, err => {
             if (err) {
                 console.log(err.message);
+                return res.status(500).send({
+                    good = false,
+                    message = 'Error while connecting to the database!',
+                    errMessage = err.message
+                });
             }
             Class.find({name: req.params.name}, (err, doc) => {
                 if (err) {
                     console.log(err.message);
-                    return res.send(500).send('Internal server error!');
+                    return res.status(500).send({
+                        good = false,
+                        message = 'Error while querying the database!',
+                        errMessage = err.message
+                    });
                 }
                 if((req.user.accountType === "Moderator" && doc.facility === req.facilities) || req.user.accountType === "Administrator")
                 {
                     Class.findOneAndUpdate({name: req.params.name}, {$push:{parents:req.body.parentName}}, {new:true}, (err, doc) => {
                         if (err) {
                             console.log(err.message);
-                            return res.send(500).send('Internal server error!');
+                            return res.status(500).send({
+                                good = false,
+                                message = 'Error while editing a document in the database!',
+                                errMessage = err.message
+                            });
                         }
-                        res.status(200).send(doc);
+                        res.status(200).send({
+                            good = true,
+                            data = doc
+                        });
                     });
                 }
                 else {
-                    return res.status(403).send('You\'re not the moderator of that facility!');
+                    return res.status(403).send({
+                        good = false,
+                        message = 'You\'re not the moderator of that facility!'
+                    });
                 }
             });
         });
     }
     else {
-        return res.status(403).send('You don\'t have permission to do that!');
+        return res.status(403).send({
+            good = false,
+            message = 'You don\'t have permission for this!'
+        });
     }
 });
 
 router.post('/:name/subject', (req, res, next) => {
-    if (req.user.accountType) {
+    if (req.user.accountType == 'Administrator' || req.user.accountType == 'Moderator') {
         mongoose.connect(PATH, {dbName: req.databaseName}, err => {
             if (err) {
                 console.log(err.message);
+                return res.status(500).send({
+                    good = false,
+                    message = 'Error while connecting to the database!',
+                    errMessage = err.message
+                });
             }
             Class.find({name: req.params.name}, (err, doc) => {
                 if (err) {
                     console.log(err.message);
-                    return res.send(500).send('Internal server error!');
+                    return res.status(500).send({
+                        good = false,
+                        message = 'Error while querying the database!',
+                        errMessage = err.message
+                    });
                 }
                 if((req.user.accountType === "Moderator" && doc.facility === req.facilities) || req.user.accountType === "Administrator")
                 {
                     Class.findOneAndUpdate({name: req.params.name}, {$push:{subjects:req.body.subjectName}}, {new:true}, (err, doc) => {
                         if (err) {
                             console.log(err.message);
-                            return res.send(500).send('Internal server error!');
+                            return res.status(500).send({
+                                good = false,
+                                message = 'Error while editing a document in the database!',
+                                errMessage = err.message
+                            });
                         }
-                        res.status(200).send(doc);
+                        res.status(200).send({
+                            good = true,
+                            data = doc
+                        });
                     });
                 }
                 else {
-                    return res.status(403).send('You\'re not the moderator of that facility!');
+                    return res.status(403).send({
+                        good = false,
+                        message = 'You\'re not the moderator of that facility!'
+                    });
                 }
             });
         });
     }
     else {
-        return res.status(403).send('You don\'t have permission to do that!');
+        return res.status(403).send({
+            good = false,
+            message = 'You don\'t have permission for this!'
+        });
     }
 });
 
 router.post('/:name/teacher', (req, res, next) => {
-    if (req.user.accountType) {
+    if (req.user.accountType == 'Administrator' || req.user.accountType == 'Moderator') {
         mongoose.connect(PATH, {dbName: req.databaseName}, err => {
             if (err) {
                 console.log(err.message);
+                return res.status(500).send({
+                    good = false,
+                    message = 'Error while connecting to the database!',
+                    errMessage = err.message
+                });
             }
             Class.find({name: req.params.name}, (err, doc) => {
                 if (err) {
                     console.log(err.message);
-                    return res.send(500).send('Internal server error!');
+                    return res.status(500).send({
+                        good = false,
+                        message = 'Error while querying the database!',
+                        errMessage = err.message
+                    });
                 }
                 if((req.user.accountType === "Moderator" && doc.facility === req.facilities) || req.user.accountType === "Administrator")
                 {
                     Class.findOneAndUpdate({name: req.params.name}, {$push:{teachers:req.body.teacherName}}, {new:true}, (err, doc) => {
                         if (err) {
                             console.log(err.message);
-                            return res.send(500).send('Internal server error!');
+                            return res.status(500).send({
+                                good = false,
+                                message = 'Error while editing a document in the database!',
+                                errMessage = err.message
+                            });
                         }
-                        res.status(200).send(doc);
+                        res.status(200).send({
+                            good = true,
+                            data = doc
+                        });
                     });
                 }
                 else {
-                    return res.status(403).send('You\'re not the moderator of that facility!');
+                    return res.status(403).send({
+                        good = false,
+                        message = 'You\'re not the moderator of that facility!'
+                    });
                 }
             });
         });
     }
     else {
-        return res.status(403).send('You don\'t have permission to do that!');
+        return res.status(403).send({
+            good = false,
+            message = 'You don\'t have permission for this!'
+        });
     }
 });
 
 router.put('/:name', (req, res, next) => {
-    if (req.user.accountType) {
+    if (req.user.accountType == 'Administrator' || req.user.accountType == 'Moderator') {
         mongoose.connect(PATH, {dbName: req.databaseName}, err => {
             if (err) {
                 console.log(err.message);
+                return res.status(500).send({
+                    good = false,
+                    message = 'Error while connecting to the database!',
+                    errMessage = err.message
+                });
             }
             Class.find({name: req.params.name}, (err, doc) => {
                 if (err) {
                     console.log(err.message);
-                    return res.send(500).send('Internal server error!');
+                    return res.status(500).send({
+                        good = false,
+                        message = 'Error while querying the database!',
+                        errMessage = err.message
+                    });
                 }
                 if((req.user.accountType === "Moderator" && doc.facility === req.facilities) || req.user.accountType === "Administrator")
                 {
                     Class.findOneAndUpdate({name: req.params.name}, req.body, {new:true}, (err, doc) => {
                         if (err) {
                             console.log(err.message);
-                            return res.send(500).send('Internal server error!');
+                            return res.status(500).send({
+                                good = false,
+                                message = 'Error while editing a document in the database!',
+                                errMessage = err.message
+                            });
                         }
-                        res.status(200).send(doc);
+                        res.status(200).send({
+                            good = true,
+                            data = doc
+                        });
                     });
                 }
                 else {
-                    return res.status(403).send('You\'re not the moderator of that facility!');
+                    return res.status(403).send({
+                        good = false,
+                        message = 'You\'re not the moderator of that facility!'
+                    });
                 }
             });
         });
     }
     else {
-        return res.status(403).send('You don\'t have permission to do that!');
+        return res.status(403).send({
+            good = false,
+            message = 'You don\'t have permission for this!'
+        });
     }
 });
 
 router.delete('/:name', (req, res, next) => {
-    if (req.user.accountType) {
+    if (req.user.accountType == 'Administrator' || req.user.accountType == 'Moderator') {
         mongoose.connect(PATH, {dbName: req.databaseName}, err => {
             if (err) {
                 console.log(err.message);
+                return res.status(500).send({
+                    good = false,
+                    message = 'Error while connecting to the database!',
+                    errMessage = err.message
+                });
             }
             Class.find({name: req.params.name}, (err, doc) => {
                 if (err) {
                     console.log(err.message);
-                    return res.send(500).send('Internal server error!');
+                    return res.status(500).send({
+                        good = false,
+                        message = 'Error while querying the database!',
+                        errMessage = err.message
+                    });
                 }
                 if((req.user.accountType === "Moderator" && doc.facility === req.facilities) || req.user.accountType === "Administrator")
                 {
                     Class.findOneAndRemove({name: req.params.name}, (err, doc) => {
                         if (err) {
                             console.log(err.message);
-                            return res.send(500).send('Internal server error!');
+                            return res.status(500).send({
+                                good = false,
+                                message = 'Error while deleting a document in the database!',
+                                errMessage = err.message
+                            });
                         }
-                        res.status(200).send(doc);
+                        res.status(200).send({
+                            good = true,
+                            data = doc
+                        });
                     });
                 }
                 else {
-                    return res.status(403).send('You\'re not the moderator of that facility!');
+                    return res.status(403).send({
+                        good = false,
+                        message = 'You\'re not the moderator of that facility!'
+                    });
                 }
             });
         });
     }
     else {
-        return res.status(403).send('You don\'t have permission to do that!');
+        return res.status(403).send({
+            good = false,
+            message = 'You don\'t have permission for this!'
+        });
     }
 });
 
 router.delete('/:name/homeTeacher', (req, res, next) => {
-    if (req.user.accountType) {
+    if (req.user.accountType == 'Administrator' || req.user.accountType == 'Moderator') {
         mongoose.connect(PATH, {dbName: req.databaseName}, err => {
             if (err) {
                 console.log(err.message);
+                return res.status(500).send({
+                    good = false,
+                    message = 'Error while connecting to the database!',
+                    errMessage = err.message
+                });
             }
             Class.find({name: req.params.name}, (err, doc) => {
                 if (err) {
                     console.log(err.message);
-                    return res.send(500).send('Internal server error!');
+                    return res.status(500).send({
+                        good = false,
+                        message = 'Error while querying the database!',
+                        errMessage = err.message
+                    });
                 }
                 if((req.user.accountType === "Moderator" && doc.facility === req.facilities) || req.user.accountType === "Administrator")
                 {
                     Class.findOneAndUpdate({name: req.params.name}, {$pull:{homeTeachers:req.body.teacherName}}, {new:true}, (err, doc) => {
                         if (err) {
                             console.log(err.message);
-                            return res.send(500).send('Internal server error!');
+                            return res.status(500).send({
+                                good = false,
+                                message = 'Error while editing a document in the database!',
+                                errMessage = err.message
+                            });
                         }
-                        res.status(200).send(doc);
+                        res.status(200).send({
+                            good = true,
+                            data = doc
+                        });
                     });
                 }
                 else {
-                    return res.status(403).send('You\'re not the moderator of that facility!');
+                    return res.status(403).send({
+                        good = false,
+                        message = 'You\'re not the moderator of that facility!'
+                    });
                 }
             });
         });
     }
     else {
-        return res.status(403).send('You don\'t have permission to do that!');
+        return res.status(403).send({
+            good = false,
+            message = 'You don\'t have permission for this!'
+        });
     }
 });
 
 router.delete('/:name/student', (req, res, next) => {
-    if (req.user.accountType) {
+    if (req.user.accountType == 'Administrator' || req.user.accountType == 'Moderator') {
         mongoose.connect(PATH, {dbName: req.databaseName}, err => {
             if (err) {
                 console.log(err.message);
+                return res.status(500).send({
+                    good = false,
+                    message = 'Error while connecting to the database!',
+                    errMessage = err.message
+                });
             }
             Class.find({name: req.params.name}, (err, doc) => {
                 if (err) {
                     console.log(err.message);
-                    return res.send(500).send('Internal server error!');
+                    return res.status(500).send({
+                        good = false,
+                        message = 'Error while querying the database!',
+                        errMessage = err.message
+                    });
                 }
                 if((req.user.accountType === "Moderator" && doc.facility === req.facilities) || req.user.accountType === "Administrator")
                 {
                     Class.findOneAndUpdate({name: req.params.name}, {$pull:{students:req.body.studentName}}, {new:true}, (err, doc) => {
                         if (err) {
                             console.log(err.message);
-                            return res.send(500).send('Internal server error!');
+                            return res.status(500).send({
+                                good = false,
+                                message = 'Error while editing a document in the database!',
+                                errMessage = err.message
+                            });
                         }
-                        res.status(200).send(doc);
+                        res.status(200).send({
+                            good = true,
+                            data = doc
+                        });
                     });
                 }
                 else {
-                    return res.status(403).send('You\'re not the moderator of that facility!');
+                    return res.status(403).send({
+                        good = false,
+                        message = 'You\'re not the moderator of that facility!'
+                    });
                 }
             });
         });
     }
     else {
-        return res.status(403).send('You don\'t have permission to do that!');
+        return res.status(403).send({
+            good = false,
+            message = 'You don\'t have permission for this!'
+        });
     }
 });
 
 router.delete('/:name/parent', (req, res, next) => {
-    if (req.user.accountType) {
+    if (req.user.accountType == 'Administrator' || req.user.accountType == 'Moderator') {
         mongoose.connect(PATH, {dbName: req.databaseName}, err => {
             if (err) {
                 console.log(err.message);
+                return res.status(500).send({
+                    good = false,
+                    message = 'Error while connecting to the database!',
+                    errMessage = err.message
+                });
             }
             Class.find({name: req.params.name}, (err, doc) => {
                 if (err) {
                     console.log(err.message);
-                    return res.send(500).send('Internal server error!');
+                    return res.status(500).send({
+                        good = false,
+                        message = 'Error while querying the database!',
+                        errMessage = err.message
+                    });
                 }
                 if((req.user.accountType === "Moderator" && doc.facility === req.facilities) || req.user.accountType === "Administrator")
                 {
                     Class.findOneAndUpdate({name: req.params.name}, {$pull:{parents:req.body.parentName}}, {new:true}, (err, doc) => {
                         if (err) {
                             console.log(err.message);
-                            return res.send(500).send('Internal server error!');
+                            return res.status(500).send({
+                                good = false,
+                                message = 'Error while editing a document in the database!',
+                                errMessage = err.message
+                            });
                         }
-                        res.status(200).send(doc);
+                        res.status(200).send({
+                            good = true,
+                            data = doc
+                        });
                     });
                 }
                 else {
-                    return res.status(403).send('You\'re not the moderator of that facility!');
+                    return res.status(403).send({
+                        good = false,
+                        message = 'You\'re not the moderator of that facility!'
+                    });
                 }
             });
         });
     }
     else {
-        return res.status(403).send('You don\'t have permission to do that!');
+        return res.status(403).send({
+            good = false,
+            message = 'You don\'t have permission for this!'
+        });
     }
 });
 
 router.delete('/:name/subject', (req, res, next) => {
-    if (req.user.accountType) {
+    if (req.user.accountType == 'Administrator' || req.user.accountType == 'Moderator') {
         mongoose.connect(PATH, {dbName: req.databaseName}, err => {
             if (err) {
                 console.log(err.message);
+                return res.status(500).send({
+                    good = false,
+                    message = 'Error while connecting to the database!',
+                    errMessage = err.message
+                });
             }
             Class.find({name: req.params.name}, (err, doc) => {
                 if (err) {
                     console.log(err.message);
-                    return res.send(500).send('Internal server error!');
+                    return res.status(500).send({
+                        good = false,
+                        message = 'Error while querying the database!',
+                        errMessage = err.message
+                    });
                 }
                 if((req.user.accountType === "Moderator" && doc.facility === req.facilities) || req.user.accountType === "Administrator")
                 {
                     Class.findOneAndUpdate({name: req.params.name}, {$pull:{subjects:req.body.subjectName}}, {new:true}, (err, doc) => {
                         if (err) {
                             console.log(err.message);
-                            return res.send(500).send('Internal server error!');
+                            return res.status(500).send({
+                                good = false,
+                                message = 'Error while editing a document in the database!',
+                                errMessage = err.message
+                            });
                         }
-                        res.status(200).send(doc);
+                        res.status(200).send({
+                            good = true,
+                            data = doc
+                        });
                     });
                 }
                 else {
-                    return res.status(403).send('You\'re not the moderator of that facility!');
+                    return res.status(403).send({
+                        good = false,
+                        message = 'You\'re not the moderator of that facility!'
+                    });
                 }
             });
         });
     }
     else {
-        return res.status(403).send('You don\'t have permission to do that!');
+        return res.status(403).send({
+            good = false,
+            message = 'You don\'t have permission for this!'
+        });
     }
 });
 
 router.delete('/:name/teacher', (req, res, next) => {
-    if (req.user.accountType) {
+    if (req.user.accountType == 'Administrator' || req.user.accountType == 'Moderator') {
         mongoose.connect(PATH, {dbName: req.databaseName}, err => {
             if (err) {
                 console.log(err.message);
+                return res.status(500).send({
+                    good = false,
+                    message = 'Error while connecting to the database!',
+                    errMessage = err.message
+                });
             }
             Class.find({name: req.params.name}, (err, doc) => {
                 if (err) {
                     console.log(err.message);
-                    return res.send(500).send('Internal server error!');
+                    return res.status(500).send({
+                        good = false,
+                        message = 'Error while querying the database!',
+                        errMessage = err.message
+                    });
                 }
                 if((req.user.accountType === "Moderator" && doc.facility === req.facilities) || req.user.accountType === "Administrator")
                 {
                     Class.findOneAndUpdate({name: req.params.name}, {$pull:{teachers:req.body.teacherName}}, {new:true}, (err, doc) => {
                         if (err) {
                             console.log(err.message);
-                            return res.send(500).send('Internal server error!');
+                            return res.status(500).send({
+                                good = false,
+                                message = 'Error while editing a document in the database!',
+                                errMessage = err.message
+                            });
                         }
-                        res.status(200).send(doc);
+                        res.status(200).send({
+                            good = true,
+                            data = doc
+                        });
                     });
                 }
                 else {
-                    return res.status(403).send('You\'re not the moderator of that facility!');
+                    return res.status(403).send({
+                        good = false,
+                        message = 'You\'re not the moderator of that facility!'
+                    });
                 }
             });
         });
     }
     else {
-        return res.status(403).send('You don\'t have permission to do that!');
+        return res.status(403).send({
+            good = false,
+            message = 'You don\'t have permission for this!'
+        });
     }
 });
 

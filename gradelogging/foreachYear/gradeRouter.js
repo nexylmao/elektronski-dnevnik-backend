@@ -24,7 +24,11 @@ router.all('*', (req, res, next) => {
     } , (err, meta, body) => {
         if (err) {
             console.log(err.message);
-            return res.status(500).send('Internal server error while identifying you!');
+            return res.status(500).send({
+                good = false,
+                errMessage = err.message,
+                message = 'Error while gathering the data on you!'
+            });
         }
         req.user = JSON.parse(body);
         next();
@@ -38,7 +42,11 @@ router.all('*', (req, res, next) => {
         }}, (err, meta, body) => {
             if (err) {
                 console.log(err.message);
-                return res.status(500).send('Internal server error!');
+                return res.status(500).send({
+                    good = false,
+                    errMessage = err.message,
+                    message = 'Error while gathering the data on schoolyears!'
+                });
             }
             else {
                 body = JSON.parse(body)[0];
@@ -48,11 +56,17 @@ router.all('*', (req, res, next) => {
                         next();
                     }
                     else {
-                        return res.status(403).send('You can\'t edit that schoolYear! It\'s inactive!');
+                        return res.status(403).send({
+                            good = false,
+                            message = 'You can\'t edit that schoolYear! It\'s inactive!'
+                        });
                     }
                 }
                 else {
-                    return res.status(403).send('You can\'t edit that schoolYear! It\'s inactive!');
+                    return res.status(403).send({
+                        good = false,
+                        message = 'You can\'t edit that schoolYear! It\'s inactive!'
+                    });
                 }
             }
         });
@@ -68,14 +82,25 @@ router.get('/', (req, res, next) => {
         mongoose.connect(PATH, {dbName: req.databaseName}, err => {
             if (err) {
                 console.log(err.message);
-                return res.status(500).send('Internal server error!');
+                return res.status(500).send({
+                        good = false,
+                        message = 'Error while connecting to the database!',
+                        errMessage = err.message
+                });
             }
             Grade.find({givenTo: req.user.username},(err, docs) => {
                 if (err) {
                     console.log(err.message);
-                    return res.status(500).send('Internal server error!');
+                    return res.status(500).send({
+                        good = false,
+                        message = 'Error while querying the database!',
+                        errMessage = err.message
+                    });
                 }
-                return res.status(200).send(docs);
+                return res.status(200).send({
+                    good = true,
+                    data = docs
+                });
             });
         }); 
     }
@@ -83,7 +108,11 @@ router.get('/', (req, res, next) => {
         mongoose.connect(PATH, {dbName: req.databaseName}, err => {
             if (err) {
                 console.log(err.message);
-                return res.status(500).send('Internal server error!');
+                return res.status(500).send({
+                    good = false,
+                    message = 'Error while connecting to the database!',
+                    errMessage = err.message
+                });
             }
             fetch.fetchUrl('http://localhost:'+PORT+'/classes/', {
                 headers : {
@@ -92,7 +121,11 @@ router.get('/', (req, res, next) => {
             }, (err, meta, body) => {
                 if (err) {
                     console.log(err.message);
-                    return res.status(500).send('Internal server error!');
+                    return res.status(500).send({
+                        good = false,
+                        message = 'Error while gathering the classes data!',
+                        errMessage = err.message
+                    });
                 }
                 body = JSON.parse(body);
                 var studs = [];
@@ -105,9 +138,16 @@ router.get('/', (req, res, next) => {
                         Grade.find({givenTo: {$in: array}},(err, docs) => {
                             if (err) {
                                 console.log(err.message);
-                                return res.status(500).send('Internal server error!');
+                                return res.status(500).send({
+                                    good = false,
+                                    message = 'Error while querying the database!',
+                                    errMessage = err.message
+                                });
                             }
-                            return res.status(200).send(docs);
+                            return res.status(200).send({
+                                good = true,
+                                data = docs
+                            });
                         });
                     }
                 });
@@ -118,7 +158,11 @@ router.get('/', (req, res, next) => {
         mongoose.connect(PATH, {dbName: req.databaseName}, err => {
             if (err) {
                 console.log(err.message);
-                return res.status(500).send('Internal server error!');
+                return res.status(500).send({
+                    good = false,
+                    message = 'Error while connecting to the database!',
+                    errMessage = err.message
+                });
             }
             fetch.fetchUrl('http://localhost:'+PORT+'/classes/', {
                 headers : {
@@ -127,7 +171,11 @@ router.get('/', (req, res, next) => {
             }, (err, meta, body) => {
                 if (err) {
                     console.log(err.message);
-                    return res.status(500).send('Internal server error!');
+                    return res.status(500).send({
+                        good = false,
+                        message = 'Error while gathering the classes data!',
+                        errMessage = err.message
+                    });
                 }
                 body = JSON.parse(body);
                 var studs = [];
@@ -140,9 +188,16 @@ router.get('/', (req, res, next) => {
                         Grade.find({givenTo: {$in: array}},(err, docs) => {
                             if (err) {
                                 console.log(err.message);
-                                return res.status(500).send('Internal server error!');
+                                return res.status(500).send({
+                                    good = false,
+                                    message = 'Error while querying the database!',
+                                    errMessage = err.message
+                                });
                             }
-                            return res.status(200).send(docs);
+                            return res.status(200).send({
+                                good = true,
+                                data = docs
+                            });
                         });
                     }
                 });
@@ -153,14 +208,25 @@ router.get('/', (req, res, next) => {
         mongoose.connect(PATH, {dbName: req.databaseName}, err => {
             if (err) {
                 console.log(err.message);
-                return res.status(500).send('Internal server error!');
+                return res.status(500).send({
+                    good = false,
+                    message = 'Error while connecting to the database!',
+                    errMessage = err.message
+                });
             }
             Grade.find({},(err, docs) => {
                 if (err) {
                     console.log(err.message);
-                    return res.status(500).send('Internal server error!');
+                    return res.status(500).send({
+                        good = false,
+                        message = 'Error while querying the database!',
+                        errMessage = err.message
+                    });
                 }
-                return res.status(200).send(docs);
+                return res.status(200).send({
+                    good = true,
+                    data = docs
+                });
             });
         }); 
     }
@@ -168,7 +234,11 @@ router.get('/', (req, res, next) => {
         mongoose.connect(PATH, {dbName: req.databaseName}, err => {
             if (err) {
                 console.log(err.message);
-                return res.status(500).send('Internal server error!');
+                return res.status(500).send({
+                    good = false,
+                    message = 'Error while connecting to the database!',
+                    errMessage = err.message
+                });
             }
             fetch.fetchUrl('http://localhost:'+PORT+'/meta/facilities/myFacility',{
                 headers : {
@@ -177,7 +247,11 @@ router.get('/', (req, res, next) => {
             }, (err, meta, body) => {
                 if (err) {
                     console.log(err.message);
-                    return res.status(500).send('Internal server error!');
+                    return res.status(500).send({
+                        good = false,
+                        message = 'Error while gathering the facility data!',
+                        errMessage = err.message
+                    });
                 }
                 req.facility = JSON.parse(body).name;
                 fetch.fetchUrl('http://localhost:'+PORT+'/classes', {
@@ -187,7 +261,11 @@ router.get('/', (req, res, next) => {
                 }, (err, meta, body) => {
                     if (err) {
                         console.log(err.message);
-                        return res.status(500).send('Internal server error!');
+                        return res.status(500).send({
+                            good = false,
+                            message = 'Error while gathering the classes data!',
+                            errMessage = err.message
+                        });
                     }
                     body = JSON.parse(body);
                     facstuds = [];
@@ -200,9 +278,16 @@ router.get('/', (req, res, next) => {
                             Grade.find({givenTo:{$in:facstuds}}, (err, docs) => {
                                 if (err) {
                                     console.log(err.message);
-                                    return res.status(500).send('Internal server error!');
+                                    return res.status(500).send({
+                                        good = false,
+                                        message = 'Error while querying the database!',
+                                        errMessage = err.message
+                                    });
                                 }
-                                return res.status(200).send(docs);
+                                return res.status(200).send({
+                                    good = true,
+                                    data = docs
+                                });
                             });
                         }
                     });
@@ -211,7 +296,10 @@ router.get('/', (req, res, next) => {
         });
     }
     else {
-        return res.status(403).send('You don\'t have permission for this!');
+        return res.status(403).send({
+            good = false,
+            message = 'You don\'t have permission for this!'
+        });
     }
 });
 
@@ -220,7 +308,11 @@ router.post('/', (req, res, next) => {
         mongoose.connect(PATH, {dbName: req.databaseName}, err => {
             if (err) {
                 console.log(err.message);
-                return res.status(500).send('Internal server error!');
+                return res.status(500).send({
+                    good = false,
+                    message = 'Error while connecting to the database!',
+                    errMessage = err.message
+                });
             }
             var newgrade;
             if (req.user.accountType === "Profesor")
@@ -240,7 +332,11 @@ router.post('/', (req, res, next) => {
                 }, (err, meta, body) => {
                     if (err) {
                         console.log(err.message);
-                        return res.status(500).send('Internal server error!');
+                        return res.status(500).send({
+                            good = false,
+                            message = 'Error while gathering the subjects data!',
+                            errMessage = err.message
+                        });
                     }
                     body = JSON.parse(body);
                     subjs = [];
@@ -255,7 +351,11 @@ router.post('/', (req, res, next) => {
                         }, (err, meta, body) => {
                             if (err) {
                                 console.log(err.message);
-                                return res.status(500).send('Internal server error!');
+                                return res.status(500).send({
+                                    good = false,
+                                    message = 'Error while gathering the classes data!',
+                                    errMessage = err.message
+                                });
                             }
                             body = JSON.parse(body);
                             studs = [];
@@ -267,13 +367,19 @@ router.post('/', (req, res, next) => {
                                     // go to next 
                                 }
                                 else {
-                                    return res.status(401).send('You can\'t give a grade to someone who you don\'t teach!');
+                                    return res.status(401).send({
+                                        good = false,
+                                        message = 'You can\'t give a grade to someone who you don\'t teach!'
+                                    });
                                 }
                             });
                         });
                     }
                     else {
-                        return res.status(401).send('You can\'t give a grade for a subject you don\'t teach!');
+                        return res.status(401).send({
+                            good = false,
+                            message = 'You can\'t give a grade for a subject you don\'t teach!'
+                        });
                     }
                 });
             }
@@ -290,14 +396,24 @@ router.post('/', (req, res, next) => {
             Grade.create(newgrade, (err, doc) => {
                 if (err) {
                     console.log(err.message);
-                    return res.status(500).send('Internal server error!');
+                    return res.status(500).send({
+                        good = false,
+                        message = 'Error occured while inserting in the database!',
+                        errMessage = err.message
+                    });
                 }
-                res.status(200).send(doc);
+                res.status(200).send({
+                    good = true,
+                    data = doc
+                });
             });
         });
     }
     else {
-        return res.status(403).send('You don\'t have permission for this!');
+        return res.status(403).send({
+            good = false,
+            message = 'You don\'t have permission for this!'
+        });
     }
 });
 
