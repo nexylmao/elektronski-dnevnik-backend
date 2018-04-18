@@ -23,9 +23,9 @@ router.all('*', (req, res, next) => {
         if (err) {
             console.log(err.message);
             return res.status(500).send({
-                good = false,
-                errMessage = err.message,
-                message = 'Error while gathering the data on you!'
+                good : false,
+                errMessage : err.message,
+                message : 'Error while gathering the data on you!'
             });
         }
         req.user = JSON.parse(body);
@@ -39,23 +39,23 @@ router.get('/', (req, res, next) => {
             if (err) {
                 console.log(err.message);
                 return res.status(500).send({
-                    good = false,
-                    message = 'Error while connecting to the database!',
-                    errMessage = err.message
+                    good : false,
+                    message : 'Error while connecting to the database!',
+                    errMessage : err.message
                 });
             }
             SY.find({}, (err, docs) => {
                 if (err) {
                     console.log(err.message);
                     return res.status(500).send({
-                        good = false,
-                        message = 'Error while querying the database!',
-                        errMessage = err.message
+                        good : false,
+                        message : 'Error while querying the database!',
+                        errMessage : err.message
                     });
                 }
                 return res.status(200).send({
-                    good = true, 
-                    data = docs
+                    good : true, 
+                    data : docs
                 });
             });
         });
@@ -63,8 +63,8 @@ router.get('/', (req, res, next) => {
     else
     {
         return res.status(403).send({
-            good = false,
-            message = 'You don\'t have permission for this!'
+            good : false,
+            message : 'You don\'t have permission for this!'
         });
     }
 });
@@ -75,23 +75,23 @@ router.get('/now', (req, res, body) => {
             if (err) {
                 console.log(err.message);
                 return res.status(500).send({
-                    good = false,
-                    message = 'Error while connecting to the database!',
-                    errMessage = err.message
+                    good : false,
+                    message : 'Error while connecting to the database!',
+                    errMessage : err.message
                 });
             }
             SY.find({yearRange:(require('../../config/getActiveYear')())}, (err, doc) => {
                 if (err) {
                     console.log(err.message);
                     return res.status(500).send({
-                        good = false,
-                        message = 'Error while querying the database!',
-                        errMessage = err.message
+                        good : false,
+                        message : 'Error while querying the database!',
+                        errMessage : err.message
                     });
                 }
                 return res.status(200).send({
-                    good = true,
-                    data = doc
+                    good : true,
+                    data : doc
                 });
             });
         });
@@ -99,8 +99,8 @@ router.get('/now', (req, res, body) => {
     else
     {
         return res.status(403).send({
-            good = false,
-            message = 'You don\'t have permission for this!'
+            good : false,
+            message : 'You don\'t have permission for this!'
         });
     }
 });
@@ -111,23 +111,23 @@ router.get('/:yearRange', (req, res, body) => {
             if (err) {
                 console.log(err.message);
                 return res.status(500).send({
-                    good = false,
-                    message = 'Error while connecting to the database!',
-                    errMessage = err.message
+                    good : false,
+                    message : 'Error while connecting to the database!',
+                    errMessage : err.message
                 });
             }
             SY.find({yearRange:req.params.yearRange}, (err, doc) => {
                 if (err) {
                     console.log(err.message);
                     return res.status(500).send({
-                        good = false,
-                        message = 'Error while querying the database!',
-                        errMessage = err.message
+                        good : false,
+                        message : 'Error while querying the database!',
+                        errMessage : err.message
                     });
                 }
                 return res.status(200).send({
-                    good = true,
-                    data = doc
+                    good : true,
+                    data : doc
                 });
             });
         });
@@ -135,8 +135,8 @@ router.get('/:yearRange', (req, res, body) => {
     else
     {
         return res.status(403).send({
-            good = false,
-            message = 'You don\'t have permission for this!'
+            good : false,
+            message : 'You don\'t have permission for this!'
         });
     }
 });
@@ -147,23 +147,23 @@ router.post('/', (req, res, next) => {
             if (err) {
                 console.log(err.message);
                 return res.status(500).send({
-                    good = false,
-                    message = 'Error while connecting to the database!',
-                    errMessage = err.message
+                    good : false,
+                    message : 'Error while connecting to the database!',
+                    errMessage : err.message
                 });
             }
             SY.create({active:true}, (err, doc) => {
                 if (err) {
                     console.log(err.message);
                     return res.status(500).send({
-                        good = false,
-                        message = 'Error while inserting in the database!',
-                        errMessage = err.message
+                        good : false,
+                        message : 'Error while inserting in the database!',
+                        errMessage : err.message
                     });
                 }
                 return res.status(200).send({
-                    good = true,
-                    data = doc
+                    good : true,
+                    data : doc
                 });
             });
         });
@@ -171,8 +171,8 @@ router.post('/', (req, res, next) => {
     else
     {
         return res.status(403).send({
-            good = false,
-            message = 'You don\'t have permission for this!'
+            good : false,
+            message : 'You don\'t have permission for this!'
         });
     }
 });
@@ -183,18 +183,18 @@ router.post('/:yearRange/facilities', (req, res, body) => {
             if (err) {
                 console.log(err.message);
                 return res.status(500).send({
-                    good = false,
-                    message = 'Error while connecting to the database!',
-                    errMessage = err.message
+                    good : false,
+                    message : 'Error while connecting to the database!',
+                    errMessage : err.message
                 });
             }
             SY.findOne({yearRange: req.params.yearRange}, (err, docs) => {
                 if (err) {
                     console.log(err.message);
                     return res.status(500).send({
-                        good = false,
-                        message = 'Error while querying the database!',
-                        errMessage = err.message
+                        good : false,
+                        message : 'Error while querying the database!',
+                        errMessage : err.message
                     });
                 }
                 if (docs.active === true)
@@ -203,21 +203,21 @@ router.post('/:yearRange/facilities', (req, res, body) => {
                         if (err) {
                             console.log(err.message);
                             return res.status(500).send({
-                                good = false,
-                                message = 'Error while editing a document in the database!',
-                                errMessage = err.message
+                                good : false,
+                                message : 'Error while editing a document in the database!',
+                                errMessage : err.message
                             });
                         }
                         return res.status(200).send({
-                            good = true,
-                            data = doc
+                            good : true,
+                            data : doc
                         });
                     });
                 }
                 else {
                     return res.status(410).send({
-                        good = false,
-                        message = 'The SchoolYear is now inactive, so it cannot be edited!'
+                        good : false,
+                        message : 'The SchoolYear is now inactive, so it cannot be edited!'
                     });
                 }
             });
@@ -226,8 +226,8 @@ router.post('/:yearRange/facilities', (req, res, body) => {
     else
     {
         return res.status(403).send({
-            good = false,
-            message = 'You don\'t have permission for this!'
+            good : false,
+            message : 'You don\'t have permission for this!'
         });
     }
 });
@@ -238,18 +238,18 @@ router.post('/:yearRange/profesors', (req, res, body) => {
             if (err) {
                 console.log(err.message);
                 return res.status(500).send({
-                    good = false,
-                    message = 'Error while connecting to the database!',
-                    errMessage = err.message
+                    good : false,
+                    message : 'Error while connecting to the database!',
+                    errMessage : err.message
                 });
             }
             SY.findOne({yearRange: req.params.yearRange}, (err, docs) => {
                 if (err) {
                     console.log(err.message);
                     return res.status(500).send({
-                        good = false,
-                        message = 'Error while querying the database!',
-                        errMessage = err.message
+                        good : false,
+                        message : 'Error while querying the database!',
+                        errMessage : err.message
                     });
                 }
                 if (docs.active == true)
@@ -258,21 +258,21 @@ router.post('/:yearRange/profesors', (req, res, body) => {
                         if (err) {
                             console.log(err.message);
                             return res.status(500).send({
-                                good = false,
-                                message = 'Error while editing a document in the database!',
-                                errMessage = err.message
+                                good : false,
+                                message : 'Error while editing a document in the database!',
+                                errMessage : err.message
                             });
                         }
                         return res.status(200).send({
-                            good = true,
-                            data = doc
+                            good : true,
+                            data : doc
                         });
                     });
                 }
                 else {
                     return res.status(410).send({
-                        good = false,
-                        message = 'The SchoolYear is now inactive, so it cannot be edited!'
+                        good : false,
+                        message : 'The SchoolYear is now inactive, so it cannot be edited!'
                     });
                 }
             });
@@ -281,8 +281,8 @@ router.post('/:yearRange/profesors', (req, res, body) => {
     else
     {
         return res.status(403).send({
-            good = false,
-            message = 'You don\'t have permission for this!'
+            good : false,
+            message : 'You don\'t have permission for this!'
         });
     }
 });
@@ -293,23 +293,23 @@ router.post('/:yearRange/deactivate', (req, res, body) => {
             if (err) {
                 console.log(err.message);
                 return res.status(500).send({
-                    good = false,
-                    message = 'Error while connecting to the database!',
-                    errMessage = err.message
+                    good : false,
+                    message : 'Error while connecting to the database!',
+                    errMessage : err.message
                 });
             }
             SY.updateOne({yearRange:req.params.yearRange}, {active : false}, (err, doc) => {
                 if (err) {
                     console.log(err.message);
                     return res.status(500).send({
-                        good = false,
-                        message = 'Error while editing a document in the database!',
-                        errMessage = err.message
+                        good : false,
+                        message : 'Error while editing a document in the database!',
+                        errMessage : err.message
                     });
                 }
                 return res.status(200).send({
-                    good = true,
-                    data = doc
+                    good : true,
+                    data : doc
                 });
             });
         });
@@ -317,8 +317,8 @@ router.post('/:yearRange/deactivate', (req, res, body) => {
     else
     {
         return res.status(403).send({
-            good = false,
-            message = 'You don\'t have permission for this!'
+            good : false,
+            message : 'You don\'t have permission for this!'
         });
     }
 });
@@ -329,23 +329,23 @@ router.post('/:yearRange/activate', (req, res, body) => {
             if (err) {
                 console.log(err.message);
                 return res.status(500).send({
-                    good = false,
-                    message = 'Error while connecting to the database!',
-                    errMessage = err.message
+                    good : false,
+                    message : 'Error while connecting to the database!',
+                    errMessage : err.message
                 });
             }
             SY.updateOne({yearRange:req.params.yearRange}, {active : true}, (err, doc) => {
                 if (err) {
                     console.log(err.message);
                     return res.status(500).send({
-                        good = false,
-                        message = 'Error while editing a document in the database!',
-                        errMessage = err.message
+                        good : false,
+                        message : 'Error while editing a document in the database!',
+                        errMessage : err.message
                     });
                 }
                 return res.status(200).send({
-                    good = true,
-                    data = doc
+                    good : true,
+                    data : doc
                 });
             });
         });
@@ -353,8 +353,8 @@ router.post('/:yearRange/activate', (req, res, body) => {
     else
     {
         return res.status(403).send({
-            good = false,
-            message = 'You don\'t have permission for this!'
+            good : false,
+            message : 'You don\'t have permission for this!'
         });
     }
 });
@@ -365,18 +365,18 @@ router.delete('/:yearRange/profesors/', (req, res, next) => {
             if (err) {
                 console.log(err.message);
                 return res.status(500).send({
-                    good = false,
-                    message = 'Error while connecting to the database!',
-                    errMessage = err.message
+                    good : false,
+                    message : 'Error while connecting to the database!',
+                    errMessage : err.message
                 });
             }
             SY.findOne({yearRange: req.params.yearRange}, (err, docs) => {
                 if (err) {
                     console.log(err.message);
                     return res.status(500).send({
-                        good = false,
-                        message = 'Error while editing querying the database!',
-                        errMessage = err.message
+                        good : false,
+                        message : 'Error while editing querying the database!',
+                        errMessage : err.message
                     });
                 }
                 if (docs.active == true)
@@ -385,21 +385,21 @@ router.delete('/:yearRange/profesors/', (req, res, next) => {
                         if (err) {
                             console.log(err.message);
                             return res.status(500).send({
-                                good = false,
-                                message = 'Error while editing a document in the database!',
-                                errMessage = err.message
+                                good : false,
+                                message : 'Error while editing a document in the database!',
+                                errMessage : err.message
                             });
                         }
                         return res.status(200).send({
-                            good = true,
-                            data = doc
+                            good : true,
+                            data : doc
                         });
                     });
                 }
                 else {
                     return res.status(410).send({
-                        good = false,
-                        message = 'The SchoolYear is now inactive, so it cannot be edited!'
+                        good : false,
+                        message : 'The SchoolYear is now inactive, so it cannot be edited!'
                     });
                 }
             });
@@ -408,8 +408,8 @@ router.delete('/:yearRange/profesors/', (req, res, next) => {
     else
     {
         return res.status(403).send({
-            good = false,
-            message = 'You don\'t have permission for this!'
+            good : false,
+            message : 'You don\'t have permission for this!'
         });
     }
 });
@@ -420,18 +420,18 @@ router.delete('/:yearRange/facilities/', (req, res, next) => {
             if (err) {
                 console.log(err.message);
                 return res.status(500).send({
-                    good = false,
-                    message = 'Error while connecting to the database!',
-                    errMessage = err.message
+                    good : false,
+                    message : 'Error while connecting to the database!',
+                    errMessage : err.message
                 });
             }
             SY.findOne({yearRange: req.params.yearRange}, (err, docs) => {
                 if (err) {
                     console.log(err.message);
                     return res.status(500).send({
-                        good = false,
-                        message = 'Error while querying the database!',
-                        errMessage = err.message
+                        good : false,
+                        message : 'Error while querying the database!',
+                        errMessage : err.message
                     });
                 }
                 if (docs.active == true)
@@ -440,21 +440,21 @@ router.delete('/:yearRange/facilities/', (req, res, next) => {
                         if (err) {
                             console.log(err.message);
                             return res.status(500).send({
-                                good = false,
-                                message = 'Error while editing a document in the database!',
-                                errMessage = err.message
+                                good : false,
+                                message : 'Error while editing a document in the database!',
+                                errMessage : err.message
                             });
                         }
                         return res.status(200).send({
-                            good = true,
-                            data = doc
+                            good : true,
+                            data : doc
                         });
                     });
                 }
                 else {
                     return res.status(410).send({
-                        good = false,
-                        message = 'The SchoolYear is now inactive, so it cannot be edited!'
+                        good : false,
+                        message : 'The SchoolYear is now inactive, so it cannot be edited!'
                     });
                 }
             });
@@ -463,8 +463,8 @@ router.delete('/:yearRange/facilities/', (req, res, next) => {
     else
     {
         return res.status(403).send({
-            good = false,
-            message = 'You don\'t have permission for this!'
+            good : false,
+            message : 'You don\'t have permission for this!'
         });
     }
 });

@@ -23,9 +23,9 @@ router.all('*', (req, res, next) => {
         if (err) {
             console.log(err.message);
             return res.status(500).send({
-                good = false,
-                errMessage = err.message,
-                message = 'Error while gathering the data on you!'
+                good : false,
+                errMessage : err.message,
+                message : 'Error while gathering the data on you!'
             });
         }
         req.user = JSON.parse(body);
@@ -39,23 +39,23 @@ router.get('/', (req, res, next) => {
             if (err) {
                 console.log(err.message);
                 return res.status(500).send({
-                    good = false,
-                    message = 'Error while connecting to the database!',
-                    errMessage = err.message
+                    good : false,
+                    message : 'Error while connecting to the database!',
+                    errMessage : err.message
                 });
             }
             Facility.find({}, (err, docs) => {
                 if (err) {
                     console.log(err.message);
                     return res.status(500).send({
-                        good = false,
-                        message = 'Error while querying the database!',
-                        errMessage = err.message
+                        good : false,
+                        message : 'Error while querying the database!',
+                        errMessage : err.message
                     });
                 }
                 res.status(200).send({
-                    good = true,
-                    data = docs
+                    good : true,
+                    data : docs
                 });
             });
         });
@@ -63,8 +63,8 @@ router.get('/', (req, res, next) => {
     else
     {
         return res.status(403).send({
-            good = false,
-            message = 'You don\'t have permission for this!'
+            good : false,
+            message : 'You don\'t have permission for this!'
         });
     }
 });
@@ -76,46 +76,46 @@ router.get('/myFacility', (req, res, body) => {
                 if (err) {
                     console.log(err.message);
                     return res.status(500).send({
-                        good = false,
-                        message = 'Error while connecting to the database!',
-                        errMessage = err.message
+                        good : false,
+                        message : 'Error while connecting to the database!',
+                        errMessage : err.message
                     });
                 }
                 Facility.findOne({moderators : {$in : [req.user.username]}},{_id:0,name:1}, (err, doc) => {
                     if (err) {
                         console.log(err.message);
                         return res.status(500).send({
-                            good = false,
-                            message = 'Error while querying the database!',
-                            errMessage = err.message
+                            good : false,
+                            message : 'Error while querying the database!',
+                            errMessage : err.message
                         });
                     }
                     if (!doc) {
                         console.log(req.user.username + ' doesn\' have a facility!');
                         return res.status(404).send({
-                            good = false,
-                            message = 'You don\'t have a facility :c (We sent a message to the team!)'
+                            good : false,
+                            message : 'You don\'t have a facility :c (We sent a message to the team!)'
                         });
                     }
                     return res.status(200).send({
-                        good = true,
-                        data = doc
+                        good : true,
+                        data : doc
                     });
                 });
             });
         }
         else {
             return res.status(404).send({
-                good = false,
-                message = 'You\'re not a moderator!'
+                good : false,
+                message : 'You\'re not a moderator!'
             });
         }
     }
     else
     {
         return res.status(403).send({
-            good = false,
-            message = 'You don\'t have permission for this!'
+            good : false,
+            message : 'You don\'t have permission for this!'
         });
     }
 });
@@ -126,9 +126,9 @@ router.get('/:identification', (req, res, next) => {
             if (err) {
                 console.log(err.message);
                 return res.status(500).send({
-                    good = false,
-                    message = 'Error while connecting to the database!',
-                    errMessage = err.message
+                    good : false,
+                    message : 'Error while connecting to the database!',
+                    errMessage : err.message
                 });
             }
             var query = {$or : [{name:req.params.identification},{principal:req.params.identification},{location:req.params.identification}]};
@@ -136,14 +136,14 @@ router.get('/:identification', (req, res, next) => {
                 if (err) {
                     console.log(err.message);
                     return res.status(500).send({
-                        good = false,
-                        message = 'Error while querying the database!',
-                        errMessage = err.message
+                        good : false,
+                        message : 'Error while querying the database!',
+                        errMessage : err.message
                     });
                 }
                 return res.status(200).send({
-                    good = true,
-                    data = doc
+                    good : true,
+                    data : doc
                 });
             });
         });
@@ -151,8 +151,8 @@ router.get('/:identification', (req, res, next) => {
     else
     {
         return res.status(403).send({
-            good = false,
-            message = 'You don\'t have permission for this!'
+            good : false,
+            message : 'You don\'t have permission for this!'
         });
     }
 });
@@ -163,9 +163,9 @@ router.get('/:identification/moderators', (req, res, next) => {
             if (err) {
                 console.log(err.message);
                 return res.status(500).send({
-                    good = false,
-                    message = 'Error while connecting to the database!',
-                    errMessage = err.message
+                    good : false,
+                    message : 'Error while connecting to the database!',
+                    errMessage : err.message
                 });
             }
             var query = {$or : [{name:req.params.identification},{principal:req.params.identification},{location:req.params.identification}]};
@@ -173,14 +173,14 @@ router.get('/:identification/moderators', (req, res, next) => {
                 if (err) {
                     console.log(err.message);
                     return res.status(500).send({
-                        good = false,
-                        message = 'Error while querying the database!',
-                        errMessage = err.message
+                        good : false,
+                        message : 'Error while querying the database!',
+                        errMessage : err.message
                     });
                 }
                 return res.status(200).send({
-                    good = true,
-                    data = docs
+                    good : true,
+                    data : docs
                 });
             });
         });
@@ -188,8 +188,8 @@ router.get('/:identification/moderators', (req, res, next) => {
     else
     {
         return res.status(403).send({
-            good = false,
-            message = 'You don\'t have permission for this!'
+            good : false,
+            message : 'You don\'t have permission for this!'
         });
     }
 });
@@ -200,9 +200,9 @@ router.post('/', (req, res, next) => {
             if (err) {
                 console.log(err.message);
                 return res.status(500).send({
-                    good = false,
-                    message = 'Error while connecting to the database!',
-                    errMessage = err.message
+                    good : false,
+                    message : 'Error while connecting to the database!',
+                    errMessage : err.message
                 });
             }
             var newfac = {
@@ -217,14 +217,14 @@ router.post('/', (req, res, next) => {
                 if (err) {
                     console.log(err.message);
                     return res.status(500).send({
-                        good = false,
-                        message = 'Error while querying the database!',
-                        errMessage = err.message
+                        good : false,
+                        message : 'Error while querying the database!',
+                        errMessage : err.message
                     });
                 }
                 res.status(200).send({
-                    good = true,
-                    data = docs
+                    good : true,
+                    data : docs
                 });
             });
         });
@@ -232,8 +232,8 @@ router.post('/', (req, res, next) => {
     else
     {
         return res.status(403).send({
-            good = false,
-            message = 'You don\'t have permission for this!'
+            good : false,
+            message : 'You don\'t have permission for this!'
         });
     }
 });
@@ -244,9 +244,9 @@ router.post('/:identification/moderators', (req, res, next) => {
             if (err) {
                 console.log(err.message);
                 return res.status(500).send({
-                    good = false,
-                    message = 'Error while connecting to the database!',
-                    errMessage = err.message
+                    good : false,
+                    message : 'Error while connecting to the database!',
+                    errMessage : err.message
                 });
             }
             var query = {$or : [{name:req.params.identification},{principal:req.params.identification},{location:req.params.identification}]};
@@ -254,9 +254,9 @@ router.post('/:identification/moderators', (req, res, next) => {
                 if (err) {
                     console.log(err.message);
                     return res.status(500).send({
-                        good = false,
-                        message = 'Error while querying the database!',
-                        errMessage = err.message
+                        good : false,
+                        message : 'Error while querying the database!',
+                        errMessage : err.message
                     });
                 }
                 if (req.user.accountType === "Administrator" || (req.user.accountType === "Moderator" && doc.moderators.includes(req.user.username)))
@@ -265,21 +265,21 @@ router.post('/:identification/moderators', (req, res, next) => {
                         if (err) {
                             console.log(err.message);
                             return res.status(500).send({
-                                good = false,
-                                message = 'Error while editing a document in the database!',
-                                errMessage = err.message
+                                good : false,
+                                message : 'Error while editing a document in the database!',
+                                errMessage : err.message
                             });
                         }
                         res.status(200).send({
-                            good = true,
-                            data = docs
+                            good : true,
+                            data : docs
                         });
                     });
                 }
                 else {
                     return res.status(403).send({
-                        good = false,
-                        message = 'You don\'t have the permission to do that! You\'re not on the list of moderators!'
+                        good : false,
+                        message : 'You don\'t have the permission to do that! You\'re not on the list of moderators!'
                     });
                 }
             });
@@ -288,8 +288,8 @@ router.post('/:identification/moderators', (req, res, next) => {
     else
     {
         return res.status(403).send({
-            good = false,
-            message = 'You don\'t have permission for this!'
+            good : false,
+            message : 'You don\'t have permission for this!'
         });
     }
 });
@@ -300,9 +300,9 @@ router.put('/:identification', (req, res, next) => {
             if (err) {
                 console.log(err.message);
                 return res.status(500).send({
-                    good = false,
-                    message = 'Error while connecting to the database!',
-                    errMessage = err.message
+                    good : false,
+                    message : 'Error while connecting to the database!',
+                    errMessage : err.message
                 });
             }
             var query = {$or : [{name:req.params.identification},{principal:req.params.identification},{location:req.params.identification}]};
@@ -310,9 +310,9 @@ router.put('/:identification', (req, res, next) => {
                 if (err) {
                     console.log(err.message);
                     return res.status(500).send({
-                        good = false,
-                        message = 'Error while querying the database!',
-                        errMessage = err.message
+                        good : false,
+                        message : 'Error while querying the database!',
+                        errMessage : err.message
                     });
                 }
                 if (req.user.accountType === "Administrator" || (req.user.accountType === "Moderator" && doc.moderators.includes(req.user.username)))
@@ -321,21 +321,21 @@ router.put('/:identification', (req, res, next) => {
                         if (err) {
                             console.log(err.message);
                             return res.status(500).send({
-                                good = false,
-                                message = 'Error while editing a document in the database!',
-                                errMessage = err.message
+                                good : false,
+                                message : 'Error while editing a document in the database!',
+                                errMessage : err.message
                             });
                         }
                         res.status(200).send({
-                            good = true,
-                            data = docs
+                            good : true,
+                            data : docs
                         });
                     });
                 }
                 else {
                     return res.status(403).send({
-                        good = false,
-                        message = 'You don\'t have the permission to do that! You\'re not on the list of moderators!'
+                        good : false,
+                        message : 'You don\'t have the permission to do that! You\'re not on the list of moderators!'
                     });
                 }
             });
@@ -344,8 +344,8 @@ router.put('/:identification', (req, res, next) => {
     else
     {
         return res.status(403).send({
-            good = false,
-            message = 'You don\'t have permission for this!'
+            good : false,
+            message : 'You don\'t have permission for this!'
         });
     }
 });
@@ -356,9 +356,9 @@ router.delete('/:identification', (req, res, next) => {
             if (err) {
                 console.log(err.message);
                 return res.status(500).send({
-                    good = false,
-                    message = 'Error while connecting to the database!',
-                    errMessage = err.message
+                    good : false,
+                    message : 'Error while connecting to the database!',
+                    errMessage : err.message
                 });
             }
             var query = {$or : [{name:req.params.identification},{principal:req.params.identification},{location:req.params.identification}]};
@@ -366,9 +366,9 @@ router.delete('/:identification', (req, res, next) => {
                 if (err) {
                     console.log(err.message);
                     return res.status(500).send({
-                        good = false,
-                        message = 'Error while querying the database!',
-                        errMessage = err.message
+                        good : false,
+                        message : 'Error while querying the database!',
+                        errMessage : err.message
                     });
                 }
                 if (req.user.accountType === "Administrator" || (req.user.accountType === "Moderator" && doc.moderators.includes(req.user.username)))
@@ -377,21 +377,21 @@ router.delete('/:identification', (req, res, next) => {
                         if (err) {
                             console.log(err.message);
                             return res.status(500).send({
-                                good = false,
-                                message = 'Error while editing a document in the database!',
-                                errMessage = err.message
+                                good : false,
+                                message : 'Error while editing a document in the database!',
+                                errMessage : err.message
                             });
                         }
                         res.status(200).send({
-                            good = true,
-                            data = docs
+                            good : true,
+                            data : docs
                         });
                     });
                 }
                 else {
                     return res.status(403).send({
-                        good = false,
-                        message = 'You dont have the permission to do that! You\'re not on the list of moderators!'
+                        good : false,
+                        message : 'You dont have the permission to do that! You\'re not on the list of moderators!'
                     });
                 }
             });
@@ -400,8 +400,8 @@ router.delete('/:identification', (req, res, next) => {
     else
     {
         return res.status(403).send({
-            good = false,
-            message = 'You don\'t have permission for this!'
+            good : false,
+            message : 'You don\'t have permission for this!'
         });
     }
 });
@@ -412,9 +412,9 @@ router.delete('/:identification/moderators', (req, res, next) => {
             if (err) {
                 console.log(err.message);
                 return res.status(500).send({
-                    good = false,
-                    message = 'Error while connecting to the database!',
-                    errMessage = err.message
+                    good : false,
+                    message : 'Error while connecting to the database!',
+                    errMessage : err.message
                 });
             }
             var query = {$or : [{name:req.params.identification},{principal:req.params.identification},{location:req.params.identification}]};
@@ -422,9 +422,9 @@ router.delete('/:identification/moderators', (req, res, next) => {
                 if (err) {
                     console.log(err.message);
                     return res.status(500).send({
-                        good = false,
-                        message = 'Error while querying the database!',
-                        errMessage = err.message
+                        good : false,
+                        message : 'Error while querying the database!',
+                        errMessage : err.message
                     });
                 }
                 if (req.user.accountType === "Administrator" || (req.user.accountType === "Moderator" && doc.moderators.includes(req.user.username)))
@@ -433,21 +433,21 @@ router.delete('/:identification/moderators', (req, res, next) => {
                         if (err) {
                             console.log(err.message);
                             return res.status(500).send({
-                                good = false,
-                                message = 'Error while editing a document in the database!',
-                                errMessage = err.message
+                                good : false,
+                                message : 'Error while editing a document in the database!',
+                                errMessage : err.message
                             });
                         }
                         res.status(200).send({
-                            good = true,
-                            data = docs
+                            good : true,
+                            data : docs
                         });
                     });
                 }
                 else {
                     return res.status(403).send({
-                        good = true,
-                        message = 'You dont have the permission to do that! You\'re not on the list of moderators!'
+                        good : true,
+                        message : 'You dont have the permission to do that! You\'re not on the list of moderators!'
                     });
                 }
             });
@@ -456,8 +456,8 @@ router.delete('/:identification/moderators', (req, res, next) => {
     else
     {
         return res.status(403).send({
-            good = false,
-            message = 'You don\'t have permission for this!'
+            good : false,
+            message : 'You don\'t have permission for this!'
         });
     }
 });

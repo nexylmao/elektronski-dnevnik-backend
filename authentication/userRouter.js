@@ -19,9 +19,9 @@ router.all('*', (req, res, next) => {
         if (err) {
             console.log(err.message);
             return res.status(500).send({
-                good = false,
-                errMessage = err.message,
-                message = 'Error while gathering the data on you!'
+                good : false,
+                errMessage : err.message,
+                message : 'Error while gathering the data on you!'
             });
         }
         req.user = JSON.parse(body);
@@ -50,37 +50,37 @@ router.get('/', (req, res, next) => {
             if (err) {
                 console.log(err.message);
                 return res.status(500).send({
-                    good = false,
-                    message = 'Error while connecting to the database!',
-                    errMessage = err.message
+                    good : false,
+                    message : 'Error while connecting to the database!',
+                    errMessage : err.message
                 });
             }
             User.find(query,projection, (err, docs) => {
                 if (err) {
                     console.log(err.message);
                     return res.status(500).send({
-                        good = false,
-                        message = 'Error while querying the database!',
-                        errMessage = err.message
+                        good : false,
+                        message : 'Error while querying the database!',
+                        errMessage : err.message
                     });
                 }
                 if (!docs) {
                     return res.status(404).send({
-                        good = false,
-                        message = 'Query found no users!'
+                        good : false,
+                        message : 'Query found no users!'
                     });
                 }
                 return res.status(200).send({
-                    good = true,
-                    data = docs
+                    good : true,
+                    data : docs
                 });
             });
         });
     }
     else {
         return res.status(403).send({
-            good = false,
-            message = 'You don\'t have permission for this!'
+            good : false,
+            message : 'You don\'t have permission for this!'
         });
     }
 });
@@ -106,37 +106,37 @@ router.get('/:identification', (req, res, next) => {
             if (err) {
                 console.log(err.message);
                 return res.status(500).send({
-                    good = false,
-                    message = 'Error while connecting to the database!',
-                    errMessage = err.message
+                    good : false,
+                    message : 'Error while connecting to the database!',
+                    errMessage : err.message
                 });
             }
             User.find(query,projection, (err, docs) => {
                 if (err) {
                     console.log(err.message);
                     return res.status(500).send({
-                        good = false,
-                        message = 'Error while querying the database!',
-                        errMessage = err.message
+                        good : false,
+                        message : 'Error while querying the database!',
+                        errMessage : err.message
                     });
                 }
                 if (!docs) {
                     return res.status(404).send({
-                        good = false,
-                        message = 'Query found no users!'
+                        good : false,
+                        message : 'Query found no users!'
                     });
                 }
                 return res.status(200).send({
-                    good = true,
-                    data = docs
+                    good : true,
+                    data : docs
                 });
             });
         });
     }
     else {
         return res.status(403).send({
-            good = false,
-            message = 'You don\'t have permission for this!'
+            good : false,
+            message : 'You don\'t have permission for this!'
         });
     }
 });
@@ -162,37 +162,37 @@ router.get('/byType/:type', (req, res, next) => {
             if (err) {
                 console.log(err.message);
                 return res.status(500).send({
-                    good = false,
-                    message = 'Error while connecting to the database!',
-                    errMessage = err.message
+                    good : false,
+                    message : 'Error while connecting to the database!',
+                    errMessage : err.message
                 });
             }
             User.find(query,projection, (err, docs) => {
                 if (err) {
                     console.log(err.message);
                     return res.status(500).send({
-                        good = false,
-                        message = 'Error while querying the database!',
-                        errMessage = err.message
+                        good : false,
+                        message : 'Error while querying the database!',
+                        errMessage : err.message
                     });
                 }
                 if (!docs) {
                     return res.status(404).send({
-                        good = false,
-                        message = 'Query found no users!'
+                        good : false,
+                        message : 'Query found no users!'
                     });
                 }
                 return res.status(200).send({
-                    good = true,
-                    data = docs
+                    good : true,
+                    data : docs
                 });
             });
         });
     }
     else {
         return res.status(403).send({
-            good = false,
-            message = 'You don\'t have permission for this!'
+            good : false,
+            message : 'You don\'t have permission for this!'
         });
     }
 });
@@ -203,16 +203,16 @@ router.post('/', (req, res, next) => {
             if (err) {
                 console.log(err.message);
                 return res.status(500).send({
-                    good = false,
-                    message = 'Error while connecting to the database!',
-                    errMessage = err.message
+                    good : false,
+                    message : 'Error while connecting to the database!',
+                    errMessage : err.message
                 });
             }
             if (req.user.accountType === "Moderator" && (req.body.accountType === "Moderator" || req.body.accountType === "Administrator"))
             {
                 return res.status(403).send({
-                    good = false,
-                    message = 'You can\'t create a moderator or administrator!'
+                    good : false,
+                    message : 'You can\'t create a moderator or administrator!'
                 });
             }
             User.create({
@@ -226,15 +226,15 @@ router.post('/', (req, res, next) => {
                 if (err) {
                     console.log(err.message);
                     return res.status(500).send({
-                        good = false,
-                        message = 'Error while inserting in the database!',
-                        errMessage = err.message
+                        good : false,
+                        message : 'Error while inserting in the database!',
+                        errMessage : err.message
                     });
                 }
                 return res.status(201).send({
-                    good = true,
-                    data = user,
-                    message = 'Successfully created account!'
+                    good : true,
+                    data : user,
+                    message : 'Successfully created account!'
                 });
             });
         });
@@ -242,8 +242,8 @@ router.post('/', (req, res, next) => {
     else
     {
         return res.status(403).send({
-            good = false,
-            message = 'You don\'t have permission for this!'
+            good : false,
+            message : 'You don\'t have permission for this!'
         });
     }
 });
@@ -254,30 +254,30 @@ router.put('/:identification', (req, res, next) => {
             if (err) {
                 console.log(err.message);
                 return res.status(500).send({
-                    good = false,
-                    message = 'Error while connecting to the database!',
-                    errMessage = err.message
+                    good : false,
+                    message : 'Error while connecting to the database!',
+                    errMessage : err.message
                 });
             }
             var query = {$or : [{username:req.params.identification},{email:req.params.identification}]};
             User.findOneAndUpdate(query, req.body, {new: true}, (err, user) => {
                 if ((user.accountType === "Administrator" || user.accountType === "Moderator") && req.user.accountType === "Moderator") {
                     return res.status(403).send({
-                        good = false,
-                        message = 'You can\'t change an administrator or moderator!'
+                        good : false,
+                        message : 'You can\'t change an administrator or moderator!'
                     });
                 }
                 if (err) {
                     console.log(err.message);
                     return res.status(500).send({
-                        good = false,
-                        message = 'Error while editing a document in the database!',
-                        errMessage = err.message
+                        good : false,
+                        message : 'Error while editing a document in the database!',
+                        errMessage : err.message
                     });
                 }
                 return res.status(200).send({
-                    good = true,
-                    data = user
+                    good : true,
+                    data : user
                 });
             });
         });
@@ -285,8 +285,8 @@ router.put('/:identification', (req, res, next) => {
     else
     {
         return res.status(403).send({
-            good = false,
-            message = 'You don\'t have permission for this!'
+            good : false,
+            message : 'You don\'t have permission for this!'
         });
     }
 });
@@ -297,30 +297,30 @@ router.delete('/:identification', (req, res, next) => {
             if (err) {
                 console.log(err.message);
                 return res.status(500).send({
-                    good = false,
-                    message = 'Error while connecting to the database!',
-                    errMessage = err.message
+                    good : false,
+                    message : 'Error while connecting to the database!',
+                    errMessage : err.message
                 });
             }
             var query = {$or : [{username:req.params.identification},{email:req.params.identification}]};
             User.findOneAndRemove(query, (err, user) => {
                 if ((user.accountType === "Administrator" || user.accountType === "Moderator") && req.user.accountType === "Moderator") {
                     return res.status(403).send({
-                        good = false,
-                        message = 'You can\'t delete an administrator or moderator!'
+                        good : false,
+                        message : 'You can\'t delete an administrator or moderator!'
                     });
                 }
                 if (err) {
                     console.log(err.message);
                     return res.status(500).send({
-                        good = false,
-                        message = 'Error while deleting a document in the database!',
-                        errMessage = err.message
+                        good : false,
+                        message : 'Error while deleting a document in the database!',
+                        errMessage : err.message
                     });
                 }
                 res.status(200).send({
-                    good = true,
-                    message = "User "+ user.name +" was deleted. :c"
+                    good : true,
+                    message : "User "+ user.name +" was deleted. :c"
                 });
             });
         });
@@ -328,8 +328,8 @@ router.delete('/:identification', (req, res, next) => {
     else
     {
         return res.status(403).send({
-            good = false,
-            message = 'You don\'t have permission for this!'
+            good : false,
+            message : 'You don\'t have permission for this!'
         });
     }
 });

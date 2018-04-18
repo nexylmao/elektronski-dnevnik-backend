@@ -25,9 +25,9 @@ router.all('*', (req, res, next) => {
         if (err) {
             console.log(err.message);
             return res.status(500).send({
-                good = false,
-                errMessage = err.message,
-                message = 'Error while gathering the data on you!'
+                good : false,
+                errMessage : err.message,
+                message : 'Error while gathering the data on you!'
             });
         }
         req.user = JSON.parse(body);
@@ -43,9 +43,9 @@ router.all('*', (req, res, next) => {
             if (err) {
                 console.log(err.message);
                 return res.status(500).send({
-                    good = false,
-                    errMessage = err.message,
-                    message = 'Error while gathering the data on schoolyears!'
+                    good : false,
+                    errMessage : err.message,
+                    message : 'Error while gathering the data on schoolyears!'
                 });
             }
             else {
@@ -57,15 +57,15 @@ router.all('*', (req, res, next) => {
                     }
                     else {
                         return res.status(403).send({
-                            good = false,
-                            message = 'You can\'t edit that schoolYear! It\'s inactive!'
+                            good : false,
+                            message : 'You can\'t edit that schoolYear! It\'s inactive!'
                         });
                     }
                 }
                 else {
                     return res.status(403).send({
-                        good = false,
-                        message = 'You can\'t edit that schoolYear! It\'s inactive!'
+                        good : false,
+                        message : 'You can\'t edit that schoolYear! It\'s inactive!'
                     });
                 }
             }
@@ -83,23 +83,23 @@ router.get('/', (req, res, next) => {
             if (err) {
                 console.log(err.message);
                 return res.status(500).send({
-                        good = false,
-                        message = 'Error while connecting to the database!',
-                        errMessage = err.message
+                        good : false,
+                        message : 'Error while connecting to the database!',
+                        errMessage : err.message
                 });
             }
             Grade.find({givenTo: req.user.username},(err, docs) => {
                 if (err) {
                     console.log(err.message);
                     return res.status(500).send({
-                        good = false,
-                        message = 'Error while querying the database!',
-                        errMessage = err.message
+                        good : false,
+                        message : 'Error while querying the database!',
+                        errMessage : err.message
                     });
                 }
                 return res.status(200).send({
-                    good = true,
-                    data = docs
+                    good : true,
+                    data : docs
                 });
             });
         }); 
@@ -109,9 +109,9 @@ router.get('/', (req, res, next) => {
             if (err) {
                 console.log(err.message);
                 return res.status(500).send({
-                    good = false,
-                    message = 'Error while connecting to the database!',
-                    errMessage = err.message
+                    good : false,
+                    message : 'Error while connecting to the database!',
+                    errMessage : err.message
                 });
             }
             fetch.fetchUrl('http://localhost:'+PORT+'/classes/', {
@@ -122,9 +122,9 @@ router.get('/', (req, res, next) => {
                 if (err) {
                     console.log(err.message);
                     return res.status(500).send({
-                        good = false,
-                        message = 'Error while gathering the classes data!',
-                        errMessage = err.message
+                        good : false,
+                        message : 'Error while gathering the classes data!',
+                        errMessage : err.message
                     });
                 }
                 body = JSON.parse(body);
@@ -139,14 +139,14 @@ router.get('/', (req, res, next) => {
                             if (err) {
                                 console.log(err.message);
                                 return res.status(500).send({
-                                    good = false,
-                                    message = 'Error while querying the database!',
-                                    errMessage = err.message
+                                    good : false,
+                                    message : 'Error while querying the database!',
+                                    errMessage : err.message
                                 });
                             }
                             return res.status(200).send({
-                                good = true,
-                                data = docs
+                                good : true,
+                                data : docs
                             });
                         });
                     }
@@ -159,9 +159,9 @@ router.get('/', (req, res, next) => {
             if (err) {
                 console.log(err.message);
                 return res.status(500).send({
-                    good = false,
-                    message = 'Error while connecting to the database!',
-                    errMessage = err.message
+                    good : false,
+                    message : 'Error while connecting to the database!',
+                    errMessage : err.message
                 });
             }
             fetch.fetchUrl('http://localhost:'+PORT+'/classes/', {
@@ -172,9 +172,9 @@ router.get('/', (req, res, next) => {
                 if (err) {
                     console.log(err.message);
                     return res.status(500).send({
-                        good = false,
-                        message = 'Error while gathering the classes data!',
-                        errMessage = err.message
+                        good : false,
+                        message : 'Error while gathering the classes data!',
+                        errMessage : err.message
                     });
                 }
                 body = JSON.parse(body);
@@ -189,14 +189,14 @@ router.get('/', (req, res, next) => {
                             if (err) {
                                 console.log(err.message);
                                 return res.status(500).send({
-                                    good = false,
-                                    message = 'Error while querying the database!',
-                                    errMessage = err.message
+                                    good : false,
+                                    message : 'Error while querying the database!',
+                                    errMessage : err.message
                                 });
                             }
                             return res.status(200).send({
-                                good = true,
-                                data = docs
+                                good : true,
+                                data : docs
                             });
                         });
                     }
@@ -209,23 +209,23 @@ router.get('/', (req, res, next) => {
             if (err) {
                 console.log(err.message);
                 return res.status(500).send({
-                    good = false,
-                    message = 'Error while connecting to the database!',
-                    errMessage = err.message
+                    good : false,
+                    message : 'Error while connecting to the database!',
+                    errMessage : err.message
                 });
             }
             Grade.find({},(err, docs) => {
                 if (err) {
                     console.log(err.message);
                     return res.status(500).send({
-                        good = false,
-                        message = 'Error while querying the database!',
-                        errMessage = err.message
+                        good : false,
+                        message : 'Error while querying the database!',
+                        errMessage : err.message
                     });
                 }
                 return res.status(200).send({
-                    good = true,
-                    data = docs
+                    good : true,
+                    data : docs
                 });
             });
         }); 
@@ -235,9 +235,9 @@ router.get('/', (req, res, next) => {
             if (err) {
                 console.log(err.message);
                 return res.status(500).send({
-                    good = false,
-                    message = 'Error while connecting to the database!',
-                    errMessage = err.message
+                    good : false,
+                    message : 'Error while connecting to the database!',
+                    errMessage : err.message
                 });
             }
             fetch.fetchUrl('http://localhost:'+PORT+'/meta/facilities/myFacility',{
@@ -248,9 +248,9 @@ router.get('/', (req, res, next) => {
                 if (err) {
                     console.log(err.message);
                     return res.status(500).send({
-                        good = false,
-                        message = 'Error while gathering the facility data!',
-                        errMessage = err.message
+                        good : false,
+                        message : 'Error while gathering the facility data!',
+                        errMessage : err.message
                     });
                 }
                 req.facility = JSON.parse(body).name;
@@ -262,9 +262,9 @@ router.get('/', (req, res, next) => {
                     if (err) {
                         console.log(err.message);
                         return res.status(500).send({
-                            good = false,
-                            message = 'Error while gathering the classes data!',
-                            errMessage = err.message
+                            good : false,
+                            message : 'Error while gathering the classes data!',
+                            errMessage : err.message
                         });
                     }
                     body = JSON.parse(body);
@@ -279,14 +279,14 @@ router.get('/', (req, res, next) => {
                                 if (err) {
                                     console.log(err.message);
                                     return res.status(500).send({
-                                        good = false,
-                                        message = 'Error while querying the database!',
-                                        errMessage = err.message
+                                        good : false,
+                                        message : 'Error while querying the database!',
+                                        errMessage : err.message
                                     });
                                 }
                                 return res.status(200).send({
-                                    good = true,
-                                    data = docs
+                                    good : true,
+                                    data : docs
                                 });
                             });
                         }
@@ -297,8 +297,8 @@ router.get('/', (req, res, next) => {
     }
     else {
         return res.status(403).send({
-            good = false,
-            message = 'You don\'t have permission for this!'
+            good : false,
+            message : 'You don\'t have permission for this!'
         });
     }
 });
@@ -309,9 +309,9 @@ router.post('/', (req, res, next) => {
             if (err) {
                 console.log(err.message);
                 return res.status(500).send({
-                    good = false,
-                    message = 'Error while connecting to the database!',
-                    errMessage = err.message
+                    good : false,
+                    message : 'Error while connecting to the database!',
+                    errMessage : err.message
                 });
             }
             var newgrade;
@@ -333,9 +333,9 @@ router.post('/', (req, res, next) => {
                     if (err) {
                         console.log(err.message);
                         return res.status(500).send({
-                            good = false,
-                            message = 'Error while gathering the subjects data!',
-                            errMessage = err.message
+                            good : false,
+                            message : 'Error while gathering the subjects data!',
+                            errMessage : err.message
                         });
                     }
                     body = JSON.parse(body);
@@ -352,9 +352,9 @@ router.post('/', (req, res, next) => {
                             if (err) {
                                 console.log(err.message);
                                 return res.status(500).send({
-                                    good = false,
-                                    message = 'Error while gathering the classes data!',
-                                    errMessage = err.message
+                                    good : false,
+                                    message : 'Error while gathering the classes data!',
+                                    errMessage : err.message
                                 });
                             }
                             body = JSON.parse(body);
@@ -368,8 +368,8 @@ router.post('/', (req, res, next) => {
                                 }
                                 else {
                                     return res.status(401).send({
-                                        good = false,
-                                        message = 'You can\'t give a grade to someone who you don\'t teach!'
+                                        good : false,
+                                        message : 'You can\'t give a grade to someone who you don\'t teach!'
                                     });
                                 }
                             });
@@ -377,8 +377,8 @@ router.post('/', (req, res, next) => {
                     }
                     else {
                         return res.status(401).send({
-                            good = false,
-                            message = 'You can\'t give a grade for a subject you don\'t teach!'
+                            good : false,
+                            message : 'You can\'t give a grade for a subject you don\'t teach!'
                         });
                     }
                 });
@@ -397,22 +397,22 @@ router.post('/', (req, res, next) => {
                 if (err) {
                     console.log(err.message);
                     return res.status(500).send({
-                        good = false,
-                        message = 'Error occured while inserting in the database!',
-                        errMessage = err.message
+                        good : false,
+                        message : 'Error occured while inserting in the database!',
+                        errMessage : err.message
                     });
                 }
                 res.status(200).send({
-                    good = true,
-                    data = doc
+                    good : true,
+                    data : doc
                 });
             });
         });
     }
     else {
         return res.status(403).send({
-            good = false,
-            message = 'You don\'t have permission for this!'
+            good : false,
+            message : 'You don\'t have permission for this!'
         });
     }
 });

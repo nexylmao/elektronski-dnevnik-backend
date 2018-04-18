@@ -4,7 +4,7 @@
   "description": "Backend deo zadatka, za projekat - MIBP, 3. godina",
   "main": "application.js",
   "scripts": {
-    "start": "nodemon application.js",
+    "start": "node application.js",
     "test": "xo"
   },
   "author": "n33xy",
