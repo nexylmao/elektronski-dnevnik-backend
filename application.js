@@ -12,6 +12,11 @@ application.use(cors());
 application.use(bodyparser.json());
 // application.use(require('morgan')('dev'));
 
+application.use((req, res, next) => {
+    mongoose.connection.close();
+    next();
+});
+
 application.use('/api/authentication', require('./authentication/authRouter'));
 application.use('/api/users', require('./authentication/userRouter'));
 application.use('/meta/schoolYears', require('./gradelogging/meta/schoolYearRouter'));
