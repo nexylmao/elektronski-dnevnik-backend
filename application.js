@@ -10,7 +10,7 @@ const PORT = process.env.PORT || 3000;
 
 application.use(cors());
 application.use(bodyparser.json());
-application.use(require('morgan')('dev'));
+// application.use(require('morgan')('dev'));
 
 application.use('/api/authentication', require('./authentication/authRouter'));
 application.use('/api/users', require('./authentication/userRouter'));
