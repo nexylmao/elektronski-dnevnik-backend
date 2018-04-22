@@ -13,7 +13,9 @@ application.use(bodyparser.json());
 // application.use(require('morgan')('dev'));
 
 application.use((req, res, next) => {
-    mongoose.connection.close();
+    let afterResponse = () => mongoose.connection.close();
+    res.on('finish', afterResponse);
+    res.on('close',afterResponse);
     next();
 });
 
