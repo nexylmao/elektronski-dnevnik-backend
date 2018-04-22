@@ -25,6 +25,10 @@ application.use('/meta/schoolYears', require('./gradelogging/meta/schoolYearRout
 application.use('/meta/facilities', require('./gradelogging/meta/facilityRouter'));
 application.use('/', require('./gradelogging/foreachYear/unifiedRouter'));
 
+application.get('/', (req, res, err) => {
+    res.redirect('http://elektronski-dnevnik.ml');
+});
+
 application.use((err, req, res, next) => {
     console.log(err.message);
     res.status(err.status || 500).json({
