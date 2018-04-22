@@ -89,18 +89,18 @@ router.get('/:identification', (req, res, next) => {
     if(req.user.accountType)
     {
         let projection = {email:0, password:0, _id:0, createdAt:0, updatedAt:0};
-        let query = {accountType : {$ne : "Administrator"}};
+        let query = {$and : [{$or : [{username:req.params.identification},{email:req.params.identification}]}, {accountType : {$ne : "Administrator"}}]};
         if(req.user.accountType === "Administrator") {
             projection = {password:0};
-            query = {};
+            query = {$or : [{username:req.params.identification},{email:req.params.identification}]};
         }
         if(req.user.accountType === "Moderator") {
             projection = {password:0, _id:0, createdAt:0, updatedAt:0};
-            query = {};
+            query = {$or : [{username:req.params.identification},{email:req.params.identification}]};
         }
         if(req.user.accountType === "Profesor") {
             projection = {password:0, _id:0, createdAt:0, updatedAt:0};
-            query = {};
+            query = {$or : [{username:req.params.identification},{email:req.params.identification}]};
         }
         mongoose.connect(PATH, {dbName:'security'}, err => {
             if (err) {
