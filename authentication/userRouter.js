@@ -145,7 +145,7 @@ router.get('/byType/:type', (req, res, next) => {
     if(req.user.accountType)
     {
         let projection = {email:0, password:0, _id:0, createdAt:0, updatedAt:0};
-        let query = {accountType : {$and : [req.params.type,{$ne: "Moderator"},{$ne : "Administrator"}]}};
+        let query = {$and : [{accountType : req.params.type},{accountType : {$ne: "Moderator"}},{accountType : {$ne : "Administrator"}}]}};
         if(req.user.accountType === "Administrator") {
             projection = {password:0};
             query = {accountType: req.params.type};
