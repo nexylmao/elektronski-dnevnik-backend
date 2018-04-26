@@ -24,6 +24,7 @@ router.post('/register', (req, res, next) => {
     mongoose.connect(PATH, {dbName:'security'}, err => {
         if (err) {
             console.log(err.message);
+            mongoose.connection.close();
             return res.status(500).send({
                 auth : false,
                 message : 'Error while connecting to the database!',
@@ -40,6 +41,7 @@ router.post('/register', (req, res, next) => {
         User.create(foo, (err, user) => {
             if (err) {
                 console.log(err.message);
+                mongoose.connection.close();
                 return res.status(500).send({
                     auth : false,
                     message : 'Error while inserting in the database!',
@@ -49,13 +51,15 @@ router.post('/register', (req, res, next) => {
             jwt.sign({id: user.toJSON()._id}, config.secret, (err, token) => {
                 if (err) {
                     console.log(err.message);
+                    mongoose.connection.close();
                     return res.status(500).send({
                         auth : false,
                         message : 'Error while authenticating the user!',
                         errMessage : err.message
                     });
                 }
-                res.status(200).send({auth: true, token});
+                mongoose.connection.close();
+                return res.status(200).send({auth: true, token});
             });
         });
     });
@@ -80,6 +84,7 @@ router.get('/me', (req, res, next) => {
         mongoose.connect(PATH, {dbName:'security'}, err => {
             if (err) {
                 console.log(err.message);
+                mongoose.connection.close();
                 return res.status(500).send({
                     auth : false,
                     message : 'Error while connecting to the database!',
@@ -89,6 +94,7 @@ router.get('/me', (req, res, next) => {
             User.findById(decoded.id, {password: 0}, (err, user) => {
                 if (err) {
                     console.log(err.message);
+                    mongoose.connection.close();
                     return res.status(500).send({
                         auth : false,
                         message : 'Error while querying the database!',
@@ -96,12 +102,14 @@ router.get('/me', (req, res, next) => {
                     });
                 }
                 if (!user) {
+                    mongoose.connection.close();
                     return res.status(404).send({
                         auth : false,
                         message : 'Query found no users!'
                     });
                 }
-                res.status(200).send(user);
+                mongoose.connection.close();
+                return res.status(200).send(user);
             });
         });
     });
@@ -112,6 +120,7 @@ router.post('/login', (req, res, next) => {
     mongoose.connect(PATH,{dbName:'security'}, err => {
         if (err) {
             console.log(err.message);
+            mongoose.connection.close();
             return res.status(500).send({
                 auth : false,
                 message : 'Error while connecting to the database!',
@@ -121,6 +130,7 @@ router.post('/login', (req, res, next) => {
         User.findOne(query, (err, user) => {
             if (err) {
                 console.log(err.message);
+                mongoose.connection.close();
                 return res.status(500).send({
                     auth : false,
                     message : 'Error while querying the database!',
@@ -128,6 +138,7 @@ router.post('/login', (req, res, next) => {
                 });
             }
             if (!user) {
+                mongoose.connection.close();
                 return res.status(404).send({
                     auth : false,
                     message : 'Query found no users!'
@@ -139,19 +150,22 @@ router.post('/login', (req, res, next) => {
                 }, (err, token) => {
                     if (err) {
                         console.log(err.message);
+                        mongoose.connection.close();
                         return res.status(500).send({
                             auth : false,
                             message : 'Error while authenticating the user!',
                             errMessage : err.message
                         });
                     }
-                    res.status(200).send({
+                    mongoose.connection.close();
+                    return res.status(200).send({
                         auth: true,
                         token
                     });
                 });
             }
             else {
+                mongoose.connection.close();
                 res.status(401).send({
                     auth: false,
                     message: 'The password you enter is not correct!'

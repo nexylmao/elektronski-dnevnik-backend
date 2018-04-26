@@ -12,13 +12,6 @@ application.use(cors());
 application.use(bodyparser.json());
 // application.use(require('morgan')('dev'));
 
-application.use((req, res, next) => {
-    let afterResponse = () => mongoose.connection.close();
-    res.on('finish', afterResponse);
-    res.on('close',afterResponse);
-    next();
-});
-
 application.use('/api/authentication', require('./authentication/authRouter'));
 application.use('/api/users', require('./authentication/userRouter'));
 application.use('/meta/schoolYears', require('./gradelogging/meta/schoolYearRouter'));

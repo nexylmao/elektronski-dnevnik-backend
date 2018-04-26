@@ -82,21 +82,24 @@ router.get('/', (req, res, next) => {
         mongoose.connect(PATH, {dbName: req.databaseName}, err => {
             if (err) {
                 console.log(err.message);
+                mongoose.connection.close();
                 return res.status(500).send({
-                        good : false,
-                        message : 'Error while connecting to the database!',
-                        errMessage : err.message
+                    good : false,
+                    message : 'Error while connecting to the database!',
+                    errMessage : err.message
                 });
             }
             Grade.find({givenTo: req.user.username},(err, docs) => {
                 if (err) {
                     console.log(err.message);
+                    mongoose.connection.close();
                     return res.status(500).send({
                         good : false,
                         message : 'Error while querying the database!',
                         errMessage : err.message
                     });
                 }
+                mongoose.connection.close();
                 return res.status(200).send({
                     good : true,
                     data : docs
@@ -108,6 +111,7 @@ router.get('/', (req, res, next) => {
         mongoose.connect(PATH, {dbName: req.databaseName}, err => {
             if (err) {
                 console.log(err.message);
+                mongoose.connection.close();
                 return res.status(500).send({
                     good : false,
                     message : 'Error while connecting to the database!',
@@ -121,6 +125,7 @@ router.get('/', (req, res, next) => {
             }, (err, meta, body) => {
                 if (err) {
                     console.log(err.message);
+                    mongoose.connection.close();
                     return res.status(500).send({
                         good : false,
                         message : 'Error while gathering the classes data!',
@@ -138,12 +143,14 @@ router.get('/', (req, res, next) => {
                         Grade.find({givenTo: {$in: array}},(err, docs) => {
                             if (err) {
                                 console.log(err.message);
+                                mongoose.connection.close();
                                 return res.status(500).send({
                                     good : false,
                                     message : 'Error while querying the database!',
                                     errMessage : err.message
                                 });
                             }
+                            mongoose.connection.close();
                             return res.status(200).send({
                                 good : true,
                                 data : docs
@@ -158,6 +165,7 @@ router.get('/', (req, res, next) => {
         mongoose.connect(PATH, {dbName: req.databaseName}, err => {
             if (err) {
                 console.log(err.message);
+                mongoose.connection.close();
                 return res.status(500).send({
                     good : false,
                     message : 'Error while connecting to the database!',
@@ -171,6 +179,7 @@ router.get('/', (req, res, next) => {
             }, (err, meta, body) => {
                 if (err) {
                     console.log(err.message);
+                    mongoose.connection.close();
                     return res.status(500).send({
                         good : false,
                         message : 'Error while gathering the classes data!',
@@ -188,12 +197,14 @@ router.get('/', (req, res, next) => {
                         Grade.find({givenTo: {$in: array}},(err, docs) => {
                             if (err) {
                                 console.log(err.message);
+                                mongoose.connection.close();
                                 return res.status(500).send({
                                     good : false,
                                     message : 'Error while querying the database!',
                                     errMessage : err.message
                                 });
                             }
+                            mongoose.connection.close();
                             return res.status(200).send({
                                 good : true,
                                 data : docs
@@ -208,6 +219,7 @@ router.get('/', (req, res, next) => {
         mongoose.connect(PATH, {dbName: req.databaseName}, err => {
             if (err) {
                 console.log(err.message);
+                mongoose.connection.close();
                 return res.status(500).send({
                     good : false,
                     message : 'Error while connecting to the database!',
@@ -217,12 +229,14 @@ router.get('/', (req, res, next) => {
             Grade.find({},(err, docs) => {
                 if (err) {
                     console.log(err.message);
+                    mongoose.connection.close();
                     return res.status(500).send({
                         good : false,
                         message : 'Error while querying the database!',
                         errMessage : err.message
                     });
                 }
+                mongoose.connection.close();
                 return res.status(200).send({
                     good : true,
                     data : docs
@@ -234,6 +248,7 @@ router.get('/', (req, res, next) => {
         mongoose.connect(PATH, {dbName: req.databaseName}, err => {
             if (err) {
                 console.log(err.message);
+                mongoose.connection.close();
                 return res.status(500).send({
                     good : false,
                     message : 'Error while connecting to the database!',
@@ -247,6 +262,7 @@ router.get('/', (req, res, next) => {
             }, (err, meta, body) => {
                 if (err) {
                     console.log(err.message);
+                    mongoose.connection.close();
                     return res.status(500).send({
                         good : false,
                         message : 'Error while gathering the facility data!',
@@ -261,6 +277,7 @@ router.get('/', (req, res, next) => {
                 }, (err, meta, body) => {
                     if (err) {
                         console.log(err.message);
+                        mongoose.connection.close();
                         return res.status(500).send({
                             good : false,
                             message : 'Error while gathering the classes data!',
@@ -278,12 +295,14 @@ router.get('/', (req, res, next) => {
                             Grade.find({givenTo:{$in:facstuds}}, (err, docs) => {
                                 if (err) {
                                     console.log(err.message);
+                                    mongoose.connection.close();
                                     return res.status(500).send({
                                         good : false,
                                         message : 'Error while querying the database!',
                                         errMessage : err.message
                                     });
                                 }
+                                mongoose.connection.close();
                                 return res.status(200).send({
                                     good : true,
                                     data : docs
@@ -296,6 +315,7 @@ router.get('/', (req, res, next) => {
         });
     }
     else {
+        mongoose.connection.close();
         return res.status(403).send({
             good : false,
             message : 'You don\'t have permission for this!'
@@ -308,6 +328,7 @@ router.post('/', (req, res, next) => {
         mongoose.connect(PATH, {dbName: req.databaseName}, err => {
             if (err) {
                 console.log(err.message);
+                mongoose.connection.close();
                 return res.status(500).send({
                     good : false,
                     message : 'Error while connecting to the database!',
@@ -332,6 +353,7 @@ router.post('/', (req, res, next) => {
                 }, (err, meta, body) => {
                     if (err) {
                         console.log(err.message);
+                        mongoose.connection.close();
                         return res.status(500).send({
                             good : false,
                             message : 'Error while gathering the subjects data!',
@@ -351,6 +373,7 @@ router.post('/', (req, res, next) => {
                         }, (err, meta, body) => {
                             if (err) {
                                 console.log(err.message);
+                                mongoose.connection.close();
                                 return res.status(500).send({
                                     good : false,
                                     message : 'Error while gathering the classes data!',
@@ -367,6 +390,7 @@ router.post('/', (req, res, next) => {
                                     // go to next 
                                 }
                                 else {
+                                    mongoose.connection.close();
                                     return res.status(401).send({
                                         good : false,
                                         message : 'You can\'t give a grade to someone who you don\'t teach!'
@@ -376,6 +400,7 @@ router.post('/', (req, res, next) => {
                         });
                     }
                     else {
+                        mongoose.connection.close();
                         return res.status(401).send({
                             good : false,
                             message : 'You can\'t give a grade for a subject you don\'t teach!'
@@ -396,13 +421,15 @@ router.post('/', (req, res, next) => {
             Grade.create(newgrade, (err, doc) => {
                 if (err) {
                     console.log(err.message);
+                    mongoose.connection.close();
                     return res.status(500).send({
                         good : false,
                         message : 'Error occured while inserting in the database!',
                         errMessage : err.message
                     });
                 }
-                res.status(200).send({
+                mongoose.connection.close();
+                return res.status(200).send({
                     good : true,
                     data : doc
                 });

@@ -49,6 +49,7 @@ router.get('/', (req, res, next) => {
         mongoose.connect(PATH, {dbName:'security'}, err => {
             if (err) {
                 console.log(err.message);
+                mongoose.connection.close();
                 return res.status(500).send({
                     good : false,
                     message : 'Error while connecting to the database!',
@@ -58,6 +59,7 @@ router.get('/', (req, res, next) => {
             User.find(query,projection, (err, docs) => {
                 if (err) {
                     console.log(err.message);
+                    mongoose.connection.close();
                     return res.status(500).send({
                         good : false,
                         message : 'Error while querying the database!',
@@ -65,11 +67,13 @@ router.get('/', (req, res, next) => {
                     });
                 }
                 if (!docs) {
+                    mongoose.connection.close();
                     return res.status(404).send({
                         good : false,
                         message : 'Query found no users!'
                     });
                 }
+                mongoose.connection.close();
                 return res.status(200).send({
                     good : true,
                     data : docs
@@ -105,6 +109,7 @@ router.get('/:identification', (req, res, next) => {
         mongoose.connect(PATH, {dbName:'security'}, err => {
             if (err) {
                 console.log(err.message);
+                mongoose.connection.close();
                 return res.status(500).send({
                     good : false,
                     message : 'Error while connecting to the database!',
@@ -114,6 +119,7 @@ router.get('/:identification', (req, res, next) => {
             User.find(query,projection, (err, docs) => {
                 if (err) {
                     console.log(err.message);
+                    mongoose.connection.close();
                     return res.status(500).send({
                         good : false,
                         message : 'Error while querying the database!',
@@ -121,11 +127,13 @@ router.get('/:identification', (req, res, next) => {
                     });
                 }
                 if (!docs) {
+                    mongoose.connection.close();
                     return res.status(404).send({
                         good : false,
                         message : 'Query found no users!'
                     });
                 }
+                mongoose.connection.close();
                 return res.status(200).send({
                     good : true,
                     data : docs
@@ -161,6 +169,7 @@ router.get('/byType/:type', (req, res, next) => {
         mongoose.connect(PATH, {dbName:'security'}, err => {
             if (err) {
                 console.log(err.message);
+                mongoose.connection.close();
                 return res.status(500).send({
                     good : false,
                     message : 'Error while connecting to the database!',
@@ -170,6 +179,7 @@ router.get('/byType/:type', (req, res, next) => {
             User.find(query,projection, (err, docs) => {
                 if (err) {
                     console.log(err.message);
+                    mongoose.connection.close();
                     return res.status(500).send({
                         good : false,
                         message : 'Error while querying the database!',
@@ -177,11 +187,13 @@ router.get('/byType/:type', (req, res, next) => {
                     });
                 }
                 if (!docs) {
+                    mongoose.connection.close();
                     return res.status(404).send({
                         good : false,
                         message : 'Query found no users!'
                     });
                 }
+                mongoose.connection.close();
                 return res.status(200).send({
                     good : true,
                     data : docs
@@ -202,6 +214,7 @@ router.post('/', (req, res, next) => {
         mongoose.connect(PATH, {dbName:'security'}, err => {
             if (err) {
                 console.log(err.message);
+                mongoose.connection.close();
                 return res.status(500).send({
                     good : false,
                     message : 'Error while connecting to the database!',
@@ -210,6 +223,7 @@ router.post('/', (req, res, next) => {
             }
             if (req.user.accountType === "Moderator" && (req.body.accountType === "Moderator" || req.body.accountType === "Administrator"))
             {
+                mongoose.connection.close();
                 return res.status(403).send({
                     good : false,
                     message : 'You can\'t create a moderator or administrator!'
@@ -225,12 +239,14 @@ router.post('/', (req, res, next) => {
             (err, user) => {
                 if (err) {
                     console.log(err.message);
+                    mongoose.connection.close();
                     return res.status(500).send({
                         good : false,
                         message : 'Error while inserting in the database!',
                         errMessage : err.message
                     });
                 }
+                mongoose.connection.close();
                 return res.status(201).send({
                     good : true,
                     data : user,
@@ -253,6 +269,7 @@ router.put('/:identification', (req, res, next) => {
         mongoose.connect(PATH, {dbName:'security'}, err => {
             if (err) {
                 console.log(err.message);
+                mongoose.connection.close();
                 return res.status(500).send({
                     good : false,
                     message : 'Error while connecting to the database!',
@@ -262,6 +279,7 @@ router.put('/:identification', (req, res, next) => {
             var query = {$or : [{username:req.params.identification},{email:req.params.identification}]};
             User.findOneAndUpdate(query, req.body, {new: true}, (err, user) => {
                 if ((user.accountType === "Administrator" || user.accountType === "Moderator") && req.user.accountType === "Moderator") {
+                    mongoose.connection.close();
                     return res.status(403).send({
                         good : false,
                         message : 'You can\'t change an administrator or moderator!'
@@ -269,12 +287,14 @@ router.put('/:identification', (req, res, next) => {
                 }
                 if (err) {
                     console.log(err.message);
+                    mongoose.connection.close();
                     return res.status(500).send({
                         good : false,
                         message : 'Error while editing a document in the database!',
                         errMessage : err.message
                     });
                 }
+                mongoose.connection.close();
                 return res.status(200).send({
                     good : true,
                     data : user
@@ -296,6 +316,7 @@ router.delete('/:identification', (req, res, next) => {
         mongoose.connect(PATH, {dbName:'security'}, err => {
             if (err) {
                 console.log(err.message);
+                mongoose.connection.close();
                 return res.status(500).send({
                     good : false,
                     message : 'Error while connecting to the database!',
@@ -305,6 +326,7 @@ router.delete('/:identification', (req, res, next) => {
             var query = {$or : [{username:req.params.identification},{email:req.params.identification}]};
             User.findOneAndRemove(query, (err, user) => {
                 if ((user.accountType === "Administrator" || user.accountType === "Moderator") && req.user.accountType === "Moderator") {
+                    mongoose.connection.close();
                     return res.status(403).send({
                         good : false,
                         message : 'You can\'t delete an administrator or moderator!'
@@ -312,13 +334,15 @@ router.delete('/:identification', (req, res, next) => {
                 }
                 if (err) {
                     console.log(err.message);
+                    mongoose.connection.close();
                     return res.status(500).send({
                         good : false,
                         message : 'Error while deleting a document in the database!',
                         errMessage : err.message
                     });
                 }
-                res.status(200).send({
+                mongoose.connection.close();
+                return res.status(200).send({
                     good : true,
                     message : "User "+ user.name +" was deleted. :c"
                 });

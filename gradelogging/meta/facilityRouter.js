@@ -38,6 +38,7 @@ router.get('/', (req, res, next) => {
         mongoose.connect(PATH, {dbName: 'meta'}, err => {
             if (err) {
                 console.log(err.message);
+                mongoose.connection.close();
                 return res.status(500).send({
                     good : false,
                     message : 'Error while connecting to the database!',
@@ -47,13 +48,15 @@ router.get('/', (req, res, next) => {
             Facility.find({}, (err, docs) => {
                 if (err) {
                     console.log(err.message);
+                    mongoose.connection.close();
                     return res.status(500).send({
                         good : false,
                         message : 'Error while querying the database!',
                         errMessage : err.message
                     });
                 }
-                res.status(200).send({
+                mongoose.connection.close();
+                return res.status(200).send({
                     good : true,
                     data : docs
                 });
@@ -75,6 +78,7 @@ router.get('/myFacility', (req, res, body) => {
             mongoose.connect(PATH, {dbName: 'meta'}, err => {
                 if (err) {
                     console.log(err.message);
+                    mongoose.connection.close();
                     return res.status(500).send({
                         good : false,
                         message : 'Error while connecting to the database!',
@@ -84,6 +88,7 @@ router.get('/myFacility', (req, res, body) => {
                 Facility.findOne({moderators : {$in : [req.user.username]}},{_id:0,name:1}, (err, doc) => {
                     if (err) {
                         console.log(err.message);
+                        mongoose.connection.close();
                         return res.status(500).send({
                             good : false,
                             message : 'Error while querying the database!',
@@ -92,11 +97,13 @@ router.get('/myFacility', (req, res, body) => {
                     }
                     if (!doc) {
                         console.log(req.user.username + ' doesn\' have a facility!');
+                        mongoose.connection.close();
                         return res.status(404).send({
                             good : false,
                             message : 'You don\'t have a facility :c (We sent a message to the team!)'
                         });
                     }
+                    mongoose.connection.close();
                     return res.status(200).send({
                         good : true,
                         data : doc
@@ -105,7 +112,8 @@ router.get('/myFacility', (req, res, body) => {
             });
         }
         else {
-            return res.status(404).send({
+            mongoose.connection.close();
+            return res.status(403).send({
                 good : false,
                 message : 'You\'re not a moderator!'
             });
@@ -125,6 +133,7 @@ router.get('/:identification', (req, res, next) => {
         mongoose.connect(PATH, {dbName: 'meta'}, err => {
             if (err) {
                 console.log(err.message);
+                mongoose.connection.close();
                 return res.status(500).send({
                     good : false,
                     message : 'Error while connecting to the database!',
@@ -135,12 +144,14 @@ router.get('/:identification', (req, res, next) => {
             Facility.find(query, (err, docs) => {
                 if (err) {
                     console.log(err.message);
+                    mongoose.connection.close();
                     return res.status(500).send({
                         good : false,
                         message : 'Error while querying the database!',
                         errMessage : err.message
                     });
                 }
+                mongoose.connection.close();
                 return res.status(200).send({
                     good : true,
                     data : doc
@@ -162,6 +173,7 @@ router.get('/:identification/moderators', (req, res, next) => {
         mongoose.connect(PATH, {dbName: 'meta'}, err => {
             if (err) {
                 console.log(err.message);
+                mongoose.connection.close();
                 return res.status(500).send({
                     good : false,
                     message : 'Error while connecting to the database!',
@@ -172,12 +184,14 @@ router.get('/:identification/moderators', (req, res, next) => {
             Facility.find(query, {_id:0, moderators:1}, (err, docs) => {
                 if (err) {
                     console.log(err.message);
+                    mongoose.connection.close();
                     return res.status(500).send({
                         good : false,
                         message : 'Error while querying the database!',
                         errMessage : err.message
                     });
                 }
+                mongoose.connection.close();
                 return res.status(200).send({
                     good : true,
                     data : docs
@@ -199,6 +213,7 @@ router.post('/', (req, res, next) => {
         mongoose.connect(PATH, {dbName: 'meta'}, err => {
             if (err) {
                 console.log(err.message);
+                mongoose.connection.close();
                 return res.status(500).send({
                     good : false,
                     message : 'Error while connecting to the database!',
@@ -216,13 +231,15 @@ router.post('/', (req, res, next) => {
             Facility.create(newfac, (err, docs) => {
                 if (err) {
                     console.log(err.message);
+                    mongoose.connection.close();
                     return res.status(500).send({
                         good : false,
                         message : 'Error while querying the database!',
                         errMessage : err.message
                     });
                 }
-                res.status(200).send({
+                mongoose.connection.close();
+                return res.status(200).send({
                     good : true,
                     data : docs
                 });
@@ -243,6 +260,7 @@ router.post('/:identification/moderators', (req, res, next) => {
         mongoose.connect(PATH, {dbName: 'meta'}, err => {
             if (err) {
                 console.log(err.message);
+                mongoose.connection.close();
                 return res.status(500).send({
                     good : false,
                     message : 'Error while connecting to the database!',
@@ -253,6 +271,7 @@ router.post('/:identification/moderators', (req, res, next) => {
             Facility.findOne(query, (err, doc) => {
                 if (err) {
                     console.log(err.message);
+                    mongoose.connection.close();
                     return res.status(500).send({
                         good : false,
                         message : 'Error while querying the database!',
@@ -264,19 +283,22 @@ router.post('/:identification/moderators', (req, res, next) => {
                     Facility.findOneAndUpdate(query, {$push : {moderators: req.body.moderatorName}}, {new: true}, (err, docs) => {
                         if (err) {
                             console.log(err.message);
+                            mongoose.connection.close();
                             return res.status(500).send({
                                 good : false,
                                 message : 'Error while editing a document in the database!',
                                 errMessage : err.message
                             });
                         }
-                        res.status(200).send({
+                        mongoose.connection.close();
+                        return res.status(200).send({
                             good : true,
                             data : docs
                         });
                     });
                 }
                 else {
+                    mongoose.connection.close();
                     return res.status(403).send({
                         good : false,
                         message : 'You don\'t have the permission to do that! You\'re not on the list of moderators!'
@@ -299,6 +321,7 @@ router.put('/:identification', (req, res, next) => {
         mongoose.connect(PATH, {dbName: 'meta'}, err => {
             if (err) {
                 console.log(err.message);
+                mongoose.connection.close();
                 return res.status(500).send({
                     good : false,
                     message : 'Error while connecting to the database!',
@@ -309,6 +332,7 @@ router.put('/:identification', (req, res, next) => {
             Facility.findOne(query, (err, doc) => {
                 if (err) {
                     console.log(err.message);
+                    mongoose.connection.close();
                     return res.status(500).send({
                         good : false,
                         message : 'Error while querying the database!',
@@ -320,19 +344,22 @@ router.put('/:identification', (req, res, next) => {
                     Facility.findOneAndUpdate(query, req.body, {new: true}, (err, docs) => {
                         if (err) {
                             console.log(err.message);
+                            mongoose.connection.close();
                             return res.status(500).send({
                                 good : false,
                                 message : 'Error while editing a document in the database!',
                                 errMessage : err.message
                             });
                         }
-                        res.status(200).send({
+                        mongoose.connection.close();
+                        return res.status(200).send({
                             good : true,
                             data : docs
                         });
                     });
                 }
                 else {
+                    mongoose.connection.close();
                     return res.status(403).send({
                         good : false,
                         message : 'You don\'t have the permission to do that! You\'re not on the list of moderators!'
@@ -355,6 +382,7 @@ router.delete('/:identification', (req, res, next) => {
         mongoose.connect(PATH, {dbName: 'meta'}, err => {
             if (err) {
                 console.log(err.message);
+                mongoose.connection.close();
                 return res.status(500).send({
                     good : false,
                     message : 'Error while connecting to the database!',
@@ -365,6 +393,7 @@ router.delete('/:identification', (req, res, next) => {
             Facility.findOne(query, (err, doc) => {
                 if (err) {
                     console.log(err.message);
+                    mongoose.connection.close();
                     return res.status(500).send({
                         good : false,
                         message : 'Error while querying the database!',
@@ -376,19 +405,22 @@ router.delete('/:identification', (req, res, next) => {
                     Facility.findOneAndUpdate(query, {$pull : {moderators: req.body.moderatorName}}, {new: true}, (err, docs) => {
                         if (err) {
                             console.log(err.message);
+                            mongoose.connection.close();
                             return res.status(500).send({
                                 good : false,
                                 message : 'Error while editing a document in the database!',
                                 errMessage : err.message
                             });
                         }
-                        res.status(200).send({
+                        mongoose.connection.close();
+                        return res.status(200).send({
                             good : true,
                             data : docs
                         });
                     });
                 }
                 else {
+                    mongoose.connection.close();
                     return res.status(403).send({
                         good : false,
                         message : 'You dont have the permission to do that! You\'re not on the list of moderators!'
@@ -411,6 +443,7 @@ router.delete('/:identification/moderators', (req, res, next) => {
         mongoose.connect(PATH, {dbName: 'meta'}, err => {
             if (err) {
                 console.log(err.message);
+                mongoose.connection.close();
                 return res.status(500).send({
                     good : false,
                     message : 'Error while connecting to the database!',
@@ -421,6 +454,7 @@ router.delete('/:identification/moderators', (req, res, next) => {
             Facility.findOne(query, (err, doc) => {
                 if (err) {
                     console.log(err.message);
+                    mongoose.connection.close();
                     return res.status(500).send({
                         good : false,
                         message : 'Error while querying the database!',
@@ -432,19 +466,22 @@ router.delete('/:identification/moderators', (req, res, next) => {
                     Facility.findOneAndUpdate(query, {$pull : {moderators: req.body.moderatorName}}, {new: true}, (err, docs) => {
                         if (err) {
                             console.log(err.message);
+                            mongoose.connection.close();
                             return res.status(500).send({
                                 good : false,
                                 message : 'Error while editing a document in the database!',
                                 errMessage : err.message
                             });
                         }
-                        res.status(200).send({
+                        mongoose.connection.close();
+                        return res.status(200).send({
                             good : true,
                             data : docs
                         });
                     });
                 }
                 else {
+                    mongoose.connection.close();
                     return res.status(403).send({
                         good : true,
                         message : 'You dont have the permission to do that! You\'re not on the list of moderators!'

@@ -82,6 +82,7 @@ router.get('/', (req, res, next) => {
         mongoose.connect(PATH, {dbName: req.databaseName}, err => {
             if (err) {
                 console.log(err.message);
+                mongoose.connection.close();
                 return res.status(500).send({
                     good : false,
                     message : 'Error while connecting to the database!',
@@ -96,13 +97,15 @@ router.get('/', (req, res, next) => {
             Subject.find(query, projection, (err, doc) => {
                 if (err) {
                     console.log(err);
+                    mongoose.connection.close();
                     return res.status(500).send({
                         good : false,
                         message : 'Error while querying the database!',
                         errMessage : err.message
                     });
                 }
-                res.status(200).send({
+                mongoose.connection.close();
+                return res.status(200).send({
                     good : true,
                     data : doc
                 });
@@ -110,6 +113,7 @@ router.get('/', (req, res, next) => {
         });
     }
     else {
+        mongoose.connection.close();
         return res.status(403).send({
             good : false,
             message : 'You don\'t have permission for this!'
@@ -122,6 +126,7 @@ router.get('/byName/:name', (req, res, next) => {
         mongoose.connect(PATH, {dbName: req.databaseName}, err => {
             if (err) {
                 console.log(err.message);
+                mongoose.connection.close();
                 return res.status(500).send({
                     good : false,
                     message : 'Error while connecting to the database!',
@@ -136,13 +141,15 @@ router.get('/byName/:name', (req, res, next) => {
             Subject.find(query, projection, (err, doc) => {
                 if (err) {
                     console.log(err);
+                    mongoose.connection.close();
                     return res.status(500).send({
                         good : false,
                         message : 'Error while querying the database!',
                         errMessage : err.message
                     });
                 }
-                res.status(200).send({
+                mongoose.connection.close();
+                return res.status(200).send({
                     good : true,
                     data : doc
                 });
@@ -150,6 +157,7 @@ router.get('/byName/:name', (req, res, next) => {
         });
     }
     else {
+        mongoose.connection.close();
         return res.status(403).send({
             good : false,
             message : 'You don\'t have permission for this!'
@@ -162,6 +170,7 @@ router.get('/profesor/:profesor', (req, res, next) => {
         mongoose.connect(PATH, {dbName: req.databaseName}, err => {
             if (err) {
                 console.log(err.message);
+                mongoose.connection.close();
                 return res.status(500).send({
                     good : false,
                     message : 'Error while connecting to the database!',
@@ -176,13 +185,15 @@ router.get('/profesor/:profesor', (req, res, next) => {
             Subject.find(query, projection, (err, doc) => {
                 if (err) {
                     console.log(err);
+                    mongoose.connection.close();
                     return res.status(500).send({
                         good : false,
                         message : 'Error while querying the database!',
                         errMessage : err.message
                     });
                 }
-                res.status(200).send({
+                mongoose.connection.close();
+                return res.status(200).send({
                     good : true,
                     data : doc
                 });
@@ -190,6 +201,7 @@ router.get('/profesor/:profesor', (req, res, next) => {
         });
     }
     else {
+        mongoose.connection.close();
         return res.status(403).send({
             good : false,
             message : 'You don\'t have permission for this!'
@@ -202,6 +214,7 @@ router.post('/', (req, res, next) => {
         mongoose.connect(PATH, {dbName: req.databaseName}, err => {
             if (err) {
                 console.log(err.message);
+                mongoose.connection.close();
                 return res.status(500).send({
                     good : false,
                     message : 'Error while connecting to the database!',
@@ -216,13 +229,15 @@ router.post('/', (req, res, next) => {
             Subject.create(newsubj, (err, doc) => {
                 if (err) {
                     console.log(err);
+                    mongoose.connection.close();
                     return res.status(500).send({
                         good : false,
                         message : 'Error while inserting in the database!',
                         errMessage : err.message
                     });
                 }
-                res.status(200).send({
+                mongoose.connection.close();
+                return res.status(200).send({
                     good : true,
                     data : doc
                 });
@@ -230,6 +245,7 @@ router.post('/', (req, res, next) => {
         });
     }
     else {
+        mongoose.connection.close();
         return res.status(403).send({
             good : false,
             message : 'You don\'t have permission for this!'
@@ -242,6 +258,7 @@ router.post('/:name/profesor', (req, res, next) => {
         mongoose.connect(PATH, {dbName: req.databaseName}, err => {
             if (err) {
                 console.log(err.message);
+                mongoose.connection.close();
                 return res.status(500).send({
                     good : false,
                     message : 'Error while connecting to the database!',
@@ -251,13 +268,15 @@ router.post('/:name/profesor', (req, res, next) => {
             Subject.findOneAndUpdate({name: req.params.name}, {$push : {profesors:req.body.profesorName}},{new:true}, (err, doc) => {
                 if (err) {
                     console.log(err);
+                    mongoose.connection.close();
                     return res.status(500).send({
                         good : false,
                         message : 'Error while inserting in the database!',
                         errMessage : err.message
                     });
                 }
-                res.status(200).send({
+                mongoose.connection.close();
+                return res.status(200).send({
                     good : true,
                     data : doc
                 });
@@ -265,6 +284,7 @@ router.post('/:name/profesor', (req, res, next) => {
         });
     }
     else {
+        mongoose.connection.close();
         return res.status(403).send({
             good : false,
             message : 'You don\'t have permission for this!'
@@ -277,6 +297,7 @@ router.put('/:name', (req, res, next) => {
         mongoose.connect(PATH, {dbName: req.databaseName}, err => {
             if (err) {
                 console.log(err.message);
+                mongoose.connection.close();
                 return res.status(500).send({
                     good : false,
                     message : 'Error while connecting to the database!',
@@ -286,13 +307,15 @@ router.put('/:name', (req, res, next) => {
             Subject.findOneAndUpdate({name: req.params.name},req.body,{new:true}, (err, doc) => {
                 if (err) {
                     console.log(err);
+                    mongoose.connection.close();
                     return res.status(500).send({
                         good : false,
                         message : 'Error while editing a document in the database!',
                         errMessage : err.message
                     });
                 }
-                res.status(200).send({
+                mongoose.connection.close();
+                return res.status(200).send({
                     good : true,
                     data : doc
                 });
@@ -300,6 +323,7 @@ router.put('/:name', (req, res, next) => {
         });
     }
     else {
+        mongoose.connection.close();
         return res.status(403).send({
             good : false,
             message : 'You don\'t have permission for this!'
@@ -312,6 +336,7 @@ router.delete('/:name', (req, res, next) => {
         mongoose.connect(PATH, {dbName: req.databaseName}, err => {
             if (err) {
                 console.log(err.message);
+                mongoose.connection.close();
                 return res.status(500).send({
                     good : false,
                     message : 'Error while connecting to the database!',
@@ -321,13 +346,15 @@ router.delete('/:name', (req, res, next) => {
             Subject.findOneAndRemove({name: req.params.name}, (err, doc) => {
                 if (err) {
                     console.log(err);
+                    mongoose.connection.close();
                     return res.status(500).send({
                         good : false,
                         message : 'Error while deleting a document in the database!',
                         errMessage : err.message
                     });
                 }
-                res.status(200).send({
+                mongoose.connection.close();
+                return res.status(200).send({
                     good : true,
                     data : doc
                 });
@@ -335,6 +362,7 @@ router.delete('/:name', (req, res, next) => {
         });
     }
     else {
+        mongoose.connection.close();
         return res.status(403).send({
             good : false,
             message : 'You don\'t have permission for this!'
@@ -347,6 +375,7 @@ router.delete('/:name/profesor', (req, res, next) => {
         mongoose.connect(PATH, {dbName: req.databaseName}, err => {
             if (err) {
                 console.log(err.message);
+                mongoose.connection.close();
                 return res.status(500).send({
                     good : false,
                     message : 'Error while connecting to the database!',
@@ -356,13 +385,15 @@ router.delete('/:name/profesor', (req, res, next) => {
             Subject.findOneAndUpdate({name: req.params.name}, {$pull : {profesors:req.body.profesorName}},{new:true}, (err, doc) => {
                 if (err) {
                     console.log(err);
+                    mongoose.connection.close();
                     return res.status(500).send({
                         good : false,
                         message : 'Error while deleting a document in the database!',
                         errMessage : err.message
                     });
                 }
-                res.status(200).send({
+                mongoose.connection.close();
+                return res.status(200).send({
                     good : true,
                     data : doc
                 });
@@ -370,6 +401,7 @@ router.delete('/:name/profesor', (req, res, next) => {
         });
     }
     else {
+        mongoose.connection.close();
         return res.status(403).send({
             good : false,
             message : 'You don\'t have permission for this!'

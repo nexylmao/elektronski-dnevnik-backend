@@ -38,6 +38,7 @@ router.get('/', (req, res, next) => {
         mongoose.connect(PATH, {dbName: 'meta'}, err => {
             if (err) {
                 console.log(err.message);
+                mongoose.connection.close();
                 return res.status(500).send({
                     good : false,
                     message : 'Error while connecting to the database!',
@@ -47,12 +48,14 @@ router.get('/', (req, res, next) => {
             SY.find({}, (err, docs) => {
                 if (err) {
                     console.log(err.message);
+                    mongoose.connection.close();
                     return res.status(500).send({
                         good : false,
                         message : 'Error while querying the database!',
                         errMessage : err.message
                     });
                 }
+                mongoose.connection.close();
                 return res.status(200).send({
                     good : true, 
                     data : docs
@@ -74,6 +77,7 @@ router.get('/now', (req, res, body) => {
         mongoose.connect(PATH, {dbName: 'meta'}, err => {
             if (err) {
                 console.log(err.message);
+                mongoose.connection.close();
                 return res.status(500).send({
                     good : false,
                     message : 'Error while connecting to the database!',
@@ -83,12 +87,14 @@ router.get('/now', (req, res, body) => {
             SY.find({yearRange:(require('../../config/getActiveYear')())}, (err, doc) => {
                 if (err) {
                     console.log(err.message);
+                    mongoose.connection.close();
                     return res.status(500).send({
                         good : false,
                         message : 'Error while querying the database!',
                         errMessage : err.message
                     });
                 }
+                mongoose.connection.close();
                 return res.status(200).send({
                     good : true,
                     data : doc
@@ -110,6 +116,7 @@ router.get('/:yearRange', (req, res, body) => {
         mongoose.connect(PATH, {dbName: 'meta'}, err => {
             if (err) {
                 console.log(err.message);
+                mongoose.connection.close();
                 return res.status(500).send({
                     good : false,
                     message : 'Error while connecting to the database!',
@@ -119,12 +126,14 @@ router.get('/:yearRange', (req, res, body) => {
             SY.find({yearRange:req.params.yearRange}, (err, doc) => {
                 if (err) {
                     console.log(err.message);
+                    mongoose.connection.close();
                     return res.status(500).send({
                         good : false,
                         message : 'Error while querying the database!',
                         errMessage : err.message
                     });
                 }
+                mongoose.connection.close();
                 return res.status(200).send({
                     good : true,
                     data : doc
@@ -146,6 +155,7 @@ router.post('/', (req, res, next) => {
         mongoose.connect(PATH, {dbName: 'meta'}, err => {
             if (err) {
                 console.log(err.message);
+                mongoose.connection.close();
                 return res.status(500).send({
                     good : false,
                     message : 'Error while connecting to the database!',
@@ -155,12 +165,14 @@ router.post('/', (req, res, next) => {
             SY.create({active:true}, (err, doc) => {
                 if (err) {
                     console.log(err.message);
+                    mongoose.connection.close();
                     return res.status(500).send({
                         good : false,
                         message : 'Error while inserting in the database!',
                         errMessage : err.message
                     });
                 }
+                mongoose.connection.close();
                 return res.status(200).send({
                     good : true,
                     data : doc
@@ -182,6 +194,7 @@ router.post('/:yearRange/facilities', (req, res, body) => {
         mongoose.connect(PATH, {dbName: 'meta'}, err => {
             if (err) {
                 console.log(err.message);
+                mongoose.connection.close();
                 return res.status(500).send({
                     good : false,
                     message : 'Error while connecting to the database!',
@@ -191,6 +204,7 @@ router.post('/:yearRange/facilities', (req, res, body) => {
             SY.findOne({yearRange: req.params.yearRange}, (err, docs) => {
                 if (err) {
                     console.log(err.message);
+                    mongoose.connection.close();
                     return res.status(500).send({
                         good : false,
                         message : 'Error while querying the database!',
@@ -202,12 +216,14 @@ router.post('/:yearRange/facilities', (req, res, body) => {
                     SY.updateOne({yearRange:req.params.yearRange}, {$push: {facilities: req.body.facilityName}}, (err, doc) => {
                         if (err) {
                             console.log(err.message);
+                            mongoose.connection.close();
                             return res.status(500).send({
                                 good : false,
                                 message : 'Error while editing a document in the database!',
                                 errMessage : err.message
                             });
                         }
+                        mongoose.connection.close();
                         return res.status(200).send({
                             good : true,
                             data : doc
@@ -215,6 +231,7 @@ router.post('/:yearRange/facilities', (req, res, body) => {
                     });
                 }
                 else {
+                    mongoose.connection.close();
                     return res.status(410).send({
                         good : false,
                         message : 'The SchoolYear is now inactive, so it cannot be edited!'
@@ -237,6 +254,7 @@ router.post('/:yearRange/profesors', (req, res, body) => {
         mongoose.connect(PATH, {dbName: 'meta'}, err => {
             if (err) {
                 console.log(err.message);
+                mongoose.connection.close();
                 return res.status(500).send({
                     good : false,
                     message : 'Error while connecting to the database!',
@@ -246,6 +264,7 @@ router.post('/:yearRange/profesors', (req, res, body) => {
             SY.findOne({yearRange: req.params.yearRange}, (err, docs) => {
                 if (err) {
                     console.log(err.message);
+                    mongoose.connection.close();
                     return res.status(500).send({
                         good : false,
                         message : 'Error while querying the database!',
@@ -257,12 +276,14 @@ router.post('/:yearRange/profesors', (req, res, body) => {
                     SY.updateOne({yearRange:req.params.yearRange}, {$push: {profesors: req.body.profesorName}}, (err, doc) => {
                         if (err) {
                             console.log(err.message);
+                            mongoose.connection.close();
                             return res.status(500).send({
                                 good : false,
                                 message : 'Error while editing a document in the database!',
                                 errMessage : err.message
                             });
                         }
+                        mongoose.connection.close();
                         return res.status(200).send({
                             good : true,
                             data : doc
@@ -270,6 +291,7 @@ router.post('/:yearRange/profesors', (req, res, body) => {
                     });
                 }
                 else {
+                    mongoose.connection.close();
                     return res.status(410).send({
                         good : false,
                         message : 'The SchoolYear is now inactive, so it cannot be edited!'
@@ -292,6 +314,7 @@ router.post('/:yearRange/deactivate', (req, res, body) => {
         mongoose.connect(PATH, {dbName: 'meta'}, err => {
             if (err) {
                 console.log(err.message);
+                mongoose.connection.close();
                 return res.status(500).send({
                     good : false,
                     message : 'Error while connecting to the database!',
@@ -301,12 +324,14 @@ router.post('/:yearRange/deactivate', (req, res, body) => {
             SY.updateOne({yearRange:req.params.yearRange}, {active : false}, (err, doc) => {
                 if (err) {
                     console.log(err.message);
+                    mongoose.connection.close();
                     return res.status(500).send({
                         good : false,
                         message : 'Error while editing a document in the database!',
                         errMessage : err.message
                     });
                 }
+                mongoose.connection.close();
                 return res.status(200).send({
                     good : true,
                     data : doc
@@ -328,6 +353,7 @@ router.post('/:yearRange/activate', (req, res, body) => {
         mongoose.connect(PATH, {dbName: 'meta'}, err => {
             if (err) {
                 console.log(err.message);
+                mongoose.connection.close();
                 return res.status(500).send({
                     good : false,
                     message : 'Error while connecting to the database!',
@@ -337,12 +363,14 @@ router.post('/:yearRange/activate', (req, res, body) => {
             SY.updateOne({yearRange:req.params.yearRange}, {active : true}, (err, doc) => {
                 if (err) {
                     console.log(err.message);
+                    mongoose.connection.close();
                     return res.status(500).send({
                         good : false,
                         message : 'Error while editing a document in the database!',
                         errMessage : err.message
                     });
                 }
+                mongoose.connection.close();
                 return res.status(200).send({
                     good : true,
                     data : doc
@@ -364,6 +392,7 @@ router.delete('/:yearRange/profesors/', (req, res, next) => {
         mongoose.connect(PATH, {dbName: 'meta'}, err => {
             if (err) {
                 console.log(err.message);
+                mongoose.connection.close();
                 return res.status(500).send({
                     good : false,
                     message : 'Error while connecting to the database!',
@@ -373,6 +402,7 @@ router.delete('/:yearRange/profesors/', (req, res, next) => {
             SY.findOne({yearRange: req.params.yearRange}, (err, docs) => {
                 if (err) {
                     console.log(err.message);
+                    mongoose.connection.close();
                     return res.status(500).send({
                         good : false,
                         message : 'Error while editing querying the database!',
@@ -384,12 +414,14 @@ router.delete('/:yearRange/profesors/', (req, res, next) => {
                     SY.updateOne({yearRange:req.params.yearRange}, {$pull : {profesors:req.body.profesorName}}, (err, doc) => {
                         if (err) {
                             console.log(err.message);
+                            mongoose.connection.close();
                             return res.status(500).send({
                                 good : false,
                                 message : 'Error while editing a document in the database!',
                                 errMessage : err.message
                             });
                         }
+                        mongoose.connection.close();
                         return res.status(200).send({
                             good : true,
                             data : doc
@@ -397,6 +429,7 @@ router.delete('/:yearRange/profesors/', (req, res, next) => {
                     });
                 }
                 else {
+                    mongoose.connection.close();
                     return res.status(410).send({
                         good : false,
                         message : 'The SchoolYear is now inactive, so it cannot be edited!'
@@ -419,6 +452,7 @@ router.delete('/:yearRange/facilities/', (req, res, next) => {
         mongoose.connect(PATH, {dbName: 'meta'}, err => {
             if (err) {
                 console.log(err.message);
+                mongoose.connection.close();
                 return res.status(500).send({
                     good : false,
                     message : 'Error while connecting to the database!',
@@ -428,6 +462,7 @@ router.delete('/:yearRange/facilities/', (req, res, next) => {
             SY.findOne({yearRange: req.params.yearRange}, (err, docs) => {
                 if (err) {
                     console.log(err.message);
+                    mongoose.connection.close();
                     return res.status(500).send({
                         good : false,
                         message : 'Error while querying the database!',
@@ -439,12 +474,14 @@ router.delete('/:yearRange/facilities/', (req, res, next) => {
                     SY.updateOne({yearRange:req.params.yearRange}, {$pull : {facilities:req.body.facilityName}}, (err, doc) => {
                         if (err) {
                             console.log(err.message);
+                            mongoose.connection.close();
                             return res.status(500).send({
                                 good : false,
                                 message : 'Error while editing a document in the database!',
                                 errMessage : err.message
                             });
                         }
+                        mongoose.connection.close();
                         return res.status(200).send({
                             good : true,
                             data : doc
@@ -452,6 +489,7 @@ router.delete('/:yearRange/facilities/', (req, res, next) => {
                     });
                 }
                 else {
+                    mongoose.connection.close();
                     return res.status(410).send({
                         good : false,
                         message : 'The SchoolYear is now inactive, so it cannot be edited!'

@@ -106,6 +106,7 @@ router.get('/', (req, res, next) => {
         mongoose.connect(PATH, {dbName: req.databaseName}, err => {
             if (err) {
                 console.log(err.message);
+                mongoose.connection.close();
                 return res.status(500).send({
                     good : false,
                     message : 'Error while connecting to the database!',
@@ -127,13 +128,15 @@ router.get('/', (req, res, next) => {
             Class.find(query, projection, (err, docs) => {
                 if (err) {
                     console.log(err.message);
+                    mongoose.connection.close();
                     return res.status(500).send({
                         good : false,
                         message : 'Error while querying the database!',
                         errMessage : err.message
                     });
                 }
-                res.status(200).send({
+                mongoose.connection.close();
+                return res.status(200).send({
                     good : true,
                     data : docs
                 });
@@ -153,6 +156,7 @@ router.get('/:name', (req, res, next) => {
         mongoose.connect(PATH, {dbName: req.databaseName}, err => {
             if (err) {
                 console.log(err.message);
+                mongoose.connection.close();
                 return res.status(500).send({
                     good : false,
                     message : 'Error while connecting to the database!',
@@ -174,13 +178,15 @@ router.get('/:name', (req, res, next) => {
             Class.find(query, projection, (err, docs) => {
                 if (err) {
                     console.log(err.message);
+                    mongoose.connection.close();
                     return res.status(500).send({
                         good : false,
                         message : 'Error while querying the database!',
                         errMessage : err.message
                     });
                 }
-                res.status(200).send({
+                mongoose.connection.close();
+                return res.status(200).send({
                     good : true,
                     data : docs
                 });
@@ -200,6 +206,7 @@ router.post('/', (req, res, next) => {
         mongoose.connect(PATH, {dbName: req.databaseName}, err => {
             if (err) {
                 console.log(err.message);
+                mongoose.connection.close();
                 return res.status(500).send({
                     good : false,
                     message : 'Error while connecting to the database!',
@@ -225,13 +232,15 @@ router.post('/', (req, res, next) => {
             Class.create(newclass, (err, doc) => {
                 if (err) {
                     console.log(err.message);
+                    mongoose.connection.close();
                     return res.status(500).send({
                         good : false,
                         message : 'Error while inserting in the database!',
                         errMessage : err.message
                     });
                 }
-                res.status(200).send({
+                mongoose.connection.close();
+                return res.status(200).send({
                     good : true,
                     data : doc
                 });
@@ -251,6 +260,7 @@ router.post('/:name/homeTeacher', (req, res, next) => {
         mongoose.connect(PATH, {dbName: req.databaseName}, err => {
             if (err) {
                 console.log(err.message);
+                mongoose.connection.close();
                 return res.status(500).send({
                     good : false,
                     message : 'Error while connecting to the database!',
@@ -260,6 +270,7 @@ router.post('/:name/homeTeacher', (req, res, next) => {
             Class.find({name: req.params.name}, (err, doc) => {
                 if (err) {
                     console.log(err.message);
+                    mongoose.connection.close();
                     return res.status(500).send({
                         good : false,
                         message : 'Error while querying the database!',
@@ -271,19 +282,22 @@ router.post('/:name/homeTeacher', (req, res, next) => {
                     Class.findOneAndUpdate({name: req.params.name}, {$push:{homeTeachers:req.body.teacherName}}, {new:true}, (err, doc) => {
                         if (err) {
                             console.log(err.message);
+                            mongoose.connection.close();
                             return res.status(500).send({
                                 good : false,
                                 message : 'Error while editing a document in the database!',
                                 errMessage : err.message
                             });
                         }
-                        res.status(200).send({
+                        mongoose.connection.close();
+                        return res.status(200).send({
                             good : true,
                             data : doc
                         });
                     });
                 }
                 else {
+                    mongoose.connection.close();
                     return res.status(403).send({
                         good : false,
                         message : 'You\'re not the moderator of that facility!'
@@ -305,6 +319,7 @@ router.post('/:name/student', (req, res, next) => {
         mongoose.connect(PATH, {dbName: req.databaseName}, err => {
             if (err) {
                 console.log(err.message);
+                mongoose.connection.close();
                 return res.status(500).send({
                     good : false,
                     message : 'Error while connecting to the database!',
@@ -314,6 +329,7 @@ router.post('/:name/student', (req, res, next) => {
             Class.findOne({name: req.params.name}, (err, doc) => {
                 if (err) {
                     console.log(err.message);
+                    mongoose.connection.close();
                     return res.status(500).send({
                         good : false,
                         message : 'Error while querying the database!',
@@ -325,19 +341,22 @@ router.post('/:name/student', (req, res, next) => {
                     Class.findOneAndUpdate({name: req.params.name}, {$push:{students:req.body.studentName}}, {new:true}, (err, doc) => {
                         if (err) {
                             console.log(err.message);
+                            mongoose.connection.close();
                             return res.status(500).send({
                                 good : false,
                                 message : 'Error while editing a document in the database!',
                                 errMessage : err.message
                             });
                         }
-                        res.status(200).send({
+                        mongoose.connection.close();
+                        return res.status(200).send({
                             good : true,
                             data : doc
                         });
                     });
                 }
                 else {
+                    mongoose.connection.close();
                     return res.status(403).send({
                         good : false,
                         message : 'You\'re not the moderator of that facility!'
@@ -359,6 +378,7 @@ router.post('/:name/parent', (req, res, next) => {
         mongoose.connect(PATH, {dbName: req.databaseName}, err => {
             if (err) {
                 console.log(err.message);
+                mongoose.connection.close();
                 return res.status(500).send({
                     good : false,
                     message : 'Error while connecting to the database!',
@@ -368,6 +388,7 @@ router.post('/:name/parent', (req, res, next) => {
             Class.find({name: req.params.name}, (err, doc) => {
                 if (err) {
                     console.log(err.message);
+                    mongoose.connection.close();
                     return res.status(500).send({
                         good : false,
                         message : 'Error while querying the database!',
@@ -379,19 +400,22 @@ router.post('/:name/parent', (req, res, next) => {
                     Class.findOneAndUpdate({name: req.params.name}, {$push:{parents:req.body.parentName}}, {new:true}, (err, doc) => {
                         if (err) {
                             console.log(err.message);
+                            mongoose.connection.close();
                             return res.status(500).send({
                                 good : false,
                                 message : 'Error while editing a document in the database!',
                                 errMessage : err.message
                             });
                         }
-                        res.status(200).send({
+                        mongoose.connection.close();
+                        return res.status(200).send({
                             good : true,
                             data : doc
                         });
                     });
                 }
                 else {
+                    mongoose.connection.close();
                     return res.status(403).send({
                         good : false,
                         message : 'You\'re not the moderator of that facility!'
@@ -413,6 +437,7 @@ router.post('/:name/subject', (req, res, next) => {
         mongoose.connect(PATH, {dbName: req.databaseName}, err => {
             if (err) {
                 console.log(err.message);
+                mongoose.connection.close();
                 return res.status(500).send({
                     good : false,
                     message : 'Error while connecting to the database!',
@@ -422,6 +447,7 @@ router.post('/:name/subject', (req, res, next) => {
             Class.find({name: req.params.name}, (err, doc) => {
                 if (err) {
                     console.log(err.message);
+                    mongoose.connection.close();
                     return res.status(500).send({
                         good : false,
                         message : 'Error while querying the database!',
@@ -433,19 +459,22 @@ router.post('/:name/subject', (req, res, next) => {
                     Class.findOneAndUpdate({name: req.params.name}, {$push:{subjects:req.body.subjectName}}, {new:true}, (err, doc) => {
                         if (err) {
                             console.log(err.message);
+                            mongoose.connection.close();
                             return res.status(500).send({
                                 good : false,
                                 message : 'Error while editing a document in the database!',
                                 errMessage : err.message
                             });
                         }
-                        res.status(200).send({
+                        mongoose.connection.close();
+                        return res.status(200).send({
                             good : true,
                             data : doc
                         });
                     });
                 }
                 else {
+                    mongoose.connection.close();
                     return res.status(403).send({
                         good : false,
                         message : 'You\'re not the moderator of that facility!'
@@ -467,6 +496,7 @@ router.post('/:name/teacher', (req, res, next) => {
         mongoose.connect(PATH, {dbName: req.databaseName}, err => {
             if (err) {
                 console.log(err.message);
+                mongoose.connection.close();
                 return res.status(500).send({
                     good : false,
                     message : 'Error while connecting to the database!',
@@ -476,6 +506,7 @@ router.post('/:name/teacher', (req, res, next) => {
             Class.find({name: req.params.name}, (err, doc) => {
                 if (err) {
                     console.log(err.message);
+                    mongoose.connection.close();
                     return res.status(500).send({
                         good : false,
                         message : 'Error while querying the database!',
@@ -487,19 +518,22 @@ router.post('/:name/teacher', (req, res, next) => {
                     Class.findOneAndUpdate({name: req.params.name}, {$push:{teachers:req.body.teacherName}}, {new:true}, (err, doc) => {
                         if (err) {
                             console.log(err.message);
+                            mongoose.connection.close();
                             return res.status(500).send({
                                 good : false,
                                 message : 'Error while editing a document in the database!',
                                 errMessage : err.message
                             });
                         }
-                        res.status(200).send({
+                        mongoose.connection.close();
+                        return res.status(200).send({
                             good : true,
                             data : doc
                         });
                     });
                 }
                 else {
+                    mongoose.connection.close();
                     return res.status(403).send({
                         good : false,
                         message : 'You\'re not the moderator of that facility!'
@@ -521,6 +555,7 @@ router.put('/:name', (req, res, next) => {
         mongoose.connect(PATH, {dbName: req.databaseName}, err => {
             if (err) {
                 console.log(err.message);
+                mongoose.connection.close();
                 return res.status(500).send({
                     good : false,
                     message : 'Error while connecting to the database!',
@@ -530,6 +565,7 @@ router.put('/:name', (req, res, next) => {
             Class.find({name: req.params.name}, (err, doc) => {
                 if (err) {
                     console.log(err.message);
+                    mongoose.connection.close();
                     return res.status(500).send({
                         good : false,
                         message : 'Error while querying the database!',
@@ -541,19 +577,22 @@ router.put('/:name', (req, res, next) => {
                     Class.findOneAndUpdate({name: req.params.name}, req.body, {new:true}, (err, doc) => {
                         if (err) {
                             console.log(err.message);
+                            mongoose.connection.close();
                             return res.status(500).send({
                                 good : false,
                                 message : 'Error while editing a document in the database!',
                                 errMessage : err.message
                             });
                         }
-                        res.status(200).send({
+                        mongoose.connection.close();
+                        return res.status(200).send({
                             good : true,
                             data : doc
                         });
                     });
                 }
                 else {
+                    mongoose.connection.close();
                     return res.status(403).send({
                         good : false,
                         message : 'You\'re not the moderator of that facility!'
@@ -575,6 +614,7 @@ router.delete('/:name', (req, res, next) => {
         mongoose.connect(PATH, {dbName: req.databaseName}, err => {
             if (err) {
                 console.log(err.message);
+                mongoose.connection.close();
                 return res.status(500).send({
                     good : false,
                     message : 'Error while connecting to the database!',
@@ -584,6 +624,7 @@ router.delete('/:name', (req, res, next) => {
             Class.find({name: req.params.name}, (err, doc) => {
                 if (err) {
                     console.log(err.message);
+                    mongoose.connection.close();
                     return res.status(500).send({
                         good : false,
                         message : 'Error while querying the database!',
@@ -595,19 +636,22 @@ router.delete('/:name', (req, res, next) => {
                     Class.findOneAndRemove({name: req.params.name}, (err, doc) => {
                         if (err) {
                             console.log(err.message);
+                            mongoose.connection.close();
                             return res.status(500).send({
                                 good : false,
                                 message : 'Error while deleting a document in the database!',
                                 errMessage : err.message
                             });
                         }
-                        res.status(200).send({
+                        mongoose.connection.close();
+                        return res.status(200).send({
                             good : true,
                             data : doc
                         });
                     });
                 }
                 else {
+                    mongoose.connection.close();
                     return res.status(403).send({
                         good : false,
                         message : 'You\'re not the moderator of that facility!'
@@ -629,6 +673,7 @@ router.delete('/:name/homeTeacher', (req, res, next) => {
         mongoose.connect(PATH, {dbName: req.databaseName}, err => {
             if (err) {
                 console.log(err.message);
+                mongoose.connection.close();
                 return res.status(500).send({
                     good : false,
                     message : 'Error while connecting to the database!',
@@ -638,6 +683,7 @@ router.delete('/:name/homeTeacher', (req, res, next) => {
             Class.find({name: req.params.name}, (err, doc) => {
                 if (err) {
                     console.log(err.message);
+                    mongoose.connection.close();
                     return res.status(500).send({
                         good : false,
                         message : 'Error while querying the database!',
@@ -649,19 +695,22 @@ router.delete('/:name/homeTeacher', (req, res, next) => {
                     Class.findOneAndUpdate({name: req.params.name}, {$pull:{homeTeachers:req.body.teacherName}}, {new:true}, (err, doc) => {
                         if (err) {
                             console.log(err.message);
+                            mongoose.connection.close();
                             return res.status(500).send({
                                 good : false,
                                 message : 'Error while editing a document in the database!',
                                 errMessage : err.message
                             });
                         }
-                        res.status(200).send({
+                        mongoose.connection.close();
+                        return res.status(200).send({
                             good : true,
                             data : doc
                         });
                     });
                 }
                 else {
+                    mongoose.connection.close();
                     return res.status(403).send({
                         good : false,
                         message : 'You\'re not the moderator of that facility!'
@@ -683,6 +732,7 @@ router.delete('/:name/student', (req, res, next) => {
         mongoose.connect(PATH, {dbName: req.databaseName}, err => {
             if (err) {
                 console.log(err.message);
+                mongoose.connection.close();
                 return res.status(500).send({
                     good : false,
                     message : 'Error while connecting to the database!',
@@ -692,6 +742,7 @@ router.delete('/:name/student', (req, res, next) => {
             Class.find({name: req.params.name}, (err, doc) => {
                 if (err) {
                     console.log(err.message);
+                    mongoose.connection.close();
                     return res.status(500).send({
                         good : false,
                         message : 'Error while querying the database!',
@@ -703,19 +754,22 @@ router.delete('/:name/student', (req, res, next) => {
                     Class.findOneAndUpdate({name: req.params.name}, {$pull:{students:req.body.studentName}}, {new:true}, (err, doc) => {
                         if (err) {
                             console.log(err.message);
+                            mongoose.connection.close();
                             return res.status(500).send({
                                 good : false,
                                 message : 'Error while editing a document in the database!',
                                 errMessage : err.message
                             });
                         }
-                        res.status(200).send({
+                        mongoose.connection.close();
+                        return res.status(200).send({
                             good : true,
                             data : doc
                         });
                     });
                 }
                 else {
+                    mongoose.connection.close();
                     return res.status(403).send({
                         good : false,
                         message : 'You\'re not the moderator of that facility!'
@@ -737,6 +791,7 @@ router.delete('/:name/parent', (req, res, next) => {
         mongoose.connect(PATH, {dbName: req.databaseName}, err => {
             if (err) {
                 console.log(err.message);
+                mongoose.connection.close();
                 return res.status(500).send({
                     good : false,
                     message : 'Error while connecting to the database!',
@@ -746,6 +801,7 @@ router.delete('/:name/parent', (req, res, next) => {
             Class.find({name: req.params.name}, (err, doc) => {
                 if (err) {
                     console.log(err.message);
+                    mongoose.connection.close();
                     return res.status(500).send({
                         good : false,
                         message : 'Error while querying the database!',
@@ -757,13 +813,15 @@ router.delete('/:name/parent', (req, res, next) => {
                     Class.findOneAndUpdate({name: req.params.name}, {$pull:{parents:req.body.parentName}}, {new:true}, (err, doc) => {
                         if (err) {
                             console.log(err.message);
+                            mongoose.connection.close();
                             return res.status(500).send({
                                 good : false,
                                 message : 'Error while editing a document in the database!',
                                 errMessage : err.message
                             });
                         }
-                        res.status(200).send({
+                        mongoose.connection.close();
+                        return res.status(200).send({
                             good : true,
                             data : doc
                         });
@@ -811,19 +869,22 @@ router.delete('/:name/subject', (req, res, next) => {
                     Class.findOneAndUpdate({name: req.params.name}, {$pull:{subjects:req.body.subjectName}}, {new:true}, (err, doc) => {
                         if (err) {
                             console.log(err.message);
+                            mongoose.connection.close();
                             return res.status(500).send({
                                 good : false,
                                 message : 'Error while editing a document in the database!',
                                 errMessage : err.message
                             });
                         }
-                        res.status(200).send({
+                        mongoose.connection.close();
+                        return res.status(200).send({
                             good : true,
                             data : doc
                         });
                     });
                 }
                 else {
+                    mongoose.connection.close();
                     return res.status(403).send({
                         good : false,
                         message : 'You\'re not the moderator of that facility!'
@@ -845,6 +906,7 @@ router.delete('/:name/teacher', (req, res, next) => {
         mongoose.connect(PATH, {dbName: req.databaseName}, err => {
             if (err) {
                 console.log(err.message);
+                mongoose.connection.close();
                 return res.status(500).send({
                     good : false,
                     message : 'Error while connecting to the database!',
@@ -854,6 +916,7 @@ router.delete('/:name/teacher', (req, res, next) => {
             Class.find({name: req.params.name}, (err, doc) => {
                 if (err) {
                     console.log(err.message);
+                    mongoose.connection.close();
                     return res.status(500).send({
                         good : false,
                         message : 'Error while querying the database!',
@@ -865,19 +928,22 @@ router.delete('/:name/teacher', (req, res, next) => {
                     Class.findOneAndUpdate({name: req.params.name}, {$pull:{teachers:req.body.teacherName}}, {new:true}, (err, doc) => {
                         if (err) {
                             console.log(err.message);
+                            mongoose.connection.close();
                             return res.status(500).send({
                                 good : false,
                                 message : 'Error while editing a document in the database!',
                                 errMessage : err.message
                             });
                         }
-                        res.status(200).send({
+                        mongoose.connection.close();
+                        return res.status(200).send({
                             good : true,
                             data : doc
                         });
                     });
                 }
                 else {
+                    mongoose.connection.close();
                     return res.status(403).send({
                         good : false,
                         message : 'You\'re not the moderator of that facility!'
