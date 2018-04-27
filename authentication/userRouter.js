@@ -89,6 +89,52 @@ router.get('/', (req, res, next) => {
     }
 });
 
+router.get('/nameList', (req, res, next) => {
+    if(req.user.accountType)
+    {
+        mongoose.connect(PATH, {dbName:'security'}, err => {
+            if (err) {
+                console.log(err.message);
+                mongoose.connection.close();
+                return res.status(500).send({
+                    good : false,
+                    message : 'Error while connecting to the database!',
+                    errMessage : err.message
+                });
+            }
+            User.find({},{_id:0, username:1, fullname:1}, (err, docs) => {
+                if (err) {
+                    console.log(err.message);
+                    mongoose.connection.close();
+                    return res.status(500).send({
+                        good : false,
+                        message : 'Error while querying the database!',
+                        errMessage : err.message
+                    });
+                }
+                if (!docs) {
+                    mongoose.connection.close();
+                    return res.status(404).send({
+                        good : false,
+                        message : 'Query found no users!'
+                    });
+                }
+                mongoose.connection.close();
+                return res.status(200).send({
+                    good : true,
+                    data : docs
+                });
+            });
+        });
+    }
+    else {
+        return res.status(403).send({
+            good : false,
+            message : 'You don\'t have permission for this!'
+        });
+    }
+});
+
 router.get('/:identification', (req, res, next) => {
     if(req.user.accountType)
     {
